@@ -1,7 +1,5 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
-    import { Card } from 'flowbite-svelte';
-    import { FireOutline, BellActiveAltOutline, ExclamationCircleOutline } from 'flowbite-svelte-icons';
 
     // State variables
     let fireStarted: boolean = false;
@@ -67,112 +65,146 @@
     }
 </script>
 
-<div class="container mx-auto px-4">
-    <!-- Fire Button -->
-    <button class="fire-button" on:click={toggleFire}>
-        {fireStarted ? "Fire started" : "Start fire"}
-    </button>
+<div class="container">
+    <!-- Left Side: Buttons with border and shadow -->
+    <div class="left-border">
+        <!-- Fire Button -->
+        <button class="fire-button" on:click={toggleFire}>
+            {fireStarted ? "Fire started" : "Start fire"}
+        </button>
 
-    <!-- Stove Button -->
-    <button class="stove-button" on:click={toggleStove}>
-        {stoveStarted ? "Turn off stove" : "Start stove"}
-    </button>
+        <!-- Stove Button -->
+        <button class="stove-button" on:click={toggleStove}>
+            {stoveStarted ? "Turn off stove" : "Start stove"}
+        </button>
 
-    <!-- Window Button -->
-    <button class="window-button" on:click={toggleWindow}>
-        {windowOpened ? "Open window" : "Close window"}
-    </button>
-
-    <!-- Particles Loading Bar -->
-    <div class="particles-status">
-        <p>Particles</p>
-        <div class="loading-bar">
-            <div class="loading-fill" style="width: {Math.round((particles / maxParticles) * 100)}%;"></div>
-        </div>
+        <!-- Window Button -->
+        <button class="window-button" on:click={toggleWindow}>
+            {windowOpened ? "Open window" : "Close window"}
+        </button>
     </div>
 
-    <!-- Monoxide Loading Bar -->
-    <div class="monoxide-status">
-        <p>Monoxide</p>
-        <div class="loading-bar">
-            <div class="loading-fill monoxide-fill" style="width: {Math.round((monoxide / maxMonoxide) * 100)}%;"></div>
-        </div>
-    </div>
+    <!-- Right Side: Loading Bars and Detectors -->
+    <div class="right-container">
+        <!-- Top Half: Loading Bars -->
+        <div class="top-half right-border">
+            <div class="particles-status">
+                <p>Particles</p>
+                <div class="loading-bar">
+                    <div class="loading-fill" style="width: {Math.round((particles / maxParticles) * 100)}%;"></div>
+                </div>
+            </div>
 
-    <!-- Detector Signs -->
-    <div class="detectors">
-        <div class="detector smoke-detector" style="color: {smokeDetector ? 'green' : 'red'}">
-            <p>Smoke Detector: {smokeDetector ? "True" : "False"}</p>
+            <div class="monoxide-status">
+                <p>Monoxide</p>
+                <div class="loading-bar">
+                    <div class="loading-fill monoxide-fill" style="width: {Math.round((monoxide / maxMonoxide) * 100)}%;"></div>
+                </div>
+            </div>
         </div>
-        <div class="detector monoxide-detector" style="color: {monoxideDetector ? 'green' : 'red'}">
-            <p>Monoxide Detector: {monoxideDetector ? "True" : "False"}</p>
+
+        <!-- Bottom Half: Detectors -->
+        <div class="bottom-half detector-border">
+            <div class="detectors">
+                <div class="detector smoke-detector" style="color: {smokeDetector ? 'green' : 'red'}">
+                    <p>Smoke Detector: {smokeDetector ? "True" : "False"}</p>
+                </div>
+                <div class="detector monoxide-detector" style="color: {monoxideDetector ? 'green' : 'red'}">
+                    <p>Monoxide Detector: {monoxideDetector ? "True" : "False"}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-    .fire-button {
-        position: absolute;
-        left: 25%;
+    /* Main Layout for Buttons and Bars */
+    .container {
+        display: flex;
+        justify-content: space-between;
+        height: 100vh; /* Full viewport height */
+        padding: 10px; /* 10px margin around the boxes */
+    }
+
+    /* Left Border for Buttons */
+    .left-border {
+        width: 33%; /* 33% of the page width */
+        height: 100%; /* Full height */
+        padding: 20px;
+        margin-right: 10px; /* Margin to the right of the buttons box */
+        border: 2px solid black; /* Thin black border */
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Shadow */
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Right Side: Group the bars and detectors */
+    .right-container {
+        width: 67%; /* 67% of the page width */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Top Half for Loading Bars */
+    .top-half {
+        height: 50%; /* 50% height for the top half (loading bars) */
+        padding: 20px;
+        margin-bottom: 10px; /* Margin between the top and bottom halves */
+    }
+
+    /* Bottom Half for Detectors */
+    .bottom-half {
+        height: 50%; /* 50% height for the bottom half (detectors) */
+        padding: 20px;
+    }
+
+    /* Right Border for Loading Bars */
+    .right-border {
+        border: 2px solid black;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+    }
+
+    /* Right Border for Detectors */
+    .detector-border {
+        border: 2px solid black;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+    }
+
+    /* Buttons Styles */
+    .fire-button, .stove-button, .window-button {
+        width: 100%;
         padding: 15px 30px;
+        margin-bottom: 20px;
         font-size: 24px;
         font-weight: bold;
         cursor: pointer;
-        background-color: #ff4500; /* Fiery red */
-        color: white;
         border: none;
         border-radius: 12px;
         transition: background-color 0.3s;
+    }
+
+    .fire-button {
+        background-color: #ff4500;
+        color: white;
     }
 
     .stove-button {
-        position: absolute;
-        left: 25%;
-        top: 120px;
-        padding: 15px 30px;
-        font-size: 24px;
-        font-weight: bold;
-        cursor: pointer;
-        background-color: #7f7f7f; /* Metallic gray */
+        background-color: #7f7f7f;
         color: white;
-        border: none;
-        border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        transition: background-color 0.3s;
     }
 
     .window-button {
-        position: absolute;
-        left: 25%;
-        top: 240px;
-        padding: 15px 30px;
-        font-size: 24px;
-        font-weight: bold;
-        cursor: pointer;
-        background-color: #87ceeb; /* Sky blue, reminiscent of a window */
+        background-color: #87ceeb;
         color: white;
-        border: none;
-        border-radius: 12px;
-        transition: background-color 0.3s;
     }
 
-    .particles-status, .monoxide-status {
-        position: absolute;
-        right: 10%;
-        font-size: 20px;
-        font-weight: bold;
-        color: black;
-        width: 25%; /* 50% of original size */
-    }
-
-    .particles-status {
-        top: 40px;
-    }
-
-    .monoxide-status {
-        top: 160px;
-    }
-
+    /* Loading Bars */
     .loading-bar {
         width: 100%;
         height: 30px;
@@ -193,10 +225,6 @@
 
     /* Detector Styles */
     .detectors {
-        position: absolute;
-        width: 50%;
-        top: 400px; /* Positioned below the buttons and loading bars */
-        left: 25%;
         text-align: center;
     }
 
