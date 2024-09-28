@@ -37,6 +37,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"firebase": "^10.13.2",
 		"flamewatch": "file:"
 	}
 }
