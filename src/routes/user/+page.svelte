@@ -22,8 +22,8 @@
   <!-- Display the values from the Firebase database -->
   <div class="user-data">
     <h1>Simulation Data</h1>
-    <p><strong>💨 Particles:</strong> {particles}</p>
-    <p><strong>🧴 Carbon Monoxide:</strong> {carbonMonoxide}</p>
+    <p><strong> Particles:</strong> {particles}</p>
+    <p><strong> Carbon Monoxide:</strong> {carbonMonoxide}</p>
   </div>
   
   <style>
