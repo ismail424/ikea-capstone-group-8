@@ -39,6 +39,7 @@
 	"type": "module",
 	"dependencies": {
 		"firebase": "^10.13.2",
-		"flamewatch": "file:"
+		"flamewatch": "file:",
+		"lucide-svelte": "^0.446.0"
 	}
 }
