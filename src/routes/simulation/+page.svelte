@@ -26,11 +26,12 @@
     isStoveOn = false;
     isCooking = false;
     notification = null;
+    setTimeout(simulateStoveStatus, 3000); // Simulate stove on after 3 seconds
+    setTimeout(simulateFireDetection, 7000); // Simulate fire detection after 7 seconds
   }
 
   onMount(() => {
-    setTimeout(simulateStoveStatus, 3000); // Simulate stove on after 3 seconds
-    setTimeout(simulateFireDetection, 7000); // Simulate fire detection after 7 seconds
+    resetSimulation();
   });
 </script>
   
