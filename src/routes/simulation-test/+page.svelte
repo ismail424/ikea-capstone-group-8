@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
-    import {database, ref, set } from '../../lib/firebase';
     
     // State variables
     let fireStarted: boolean = false;
@@ -19,11 +18,6 @@
     let smokeDetector: boolean = false;
     let monoxideDetector: boolean = false;
 
-      // Function to update the state in Firebase
-    function updateFirebaseState(stateKey: String, value: any) {
-        const stateRef = ref(database, `simulation/${stateKey}`);
-        set(stateRef, value);
-    }
 
     // Function to calculate particles and monoxide based on stove, fire, and window states
     function calculateParticlesAndMonoxide() {
@@ -46,8 +40,6 @@
 
         // Update monoxide detector logic
         monoxideDetector = monoxide > 40;
-        updateFirebaseState('particles', particles);
-        updateFirebaseState('carbonMonoxide', monoxide);
     }
 
     // Start updating particles and monoxide every two seconds
