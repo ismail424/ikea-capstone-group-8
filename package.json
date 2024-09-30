@@ -38,6 +38,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^6.6.0",
+		"@fortawesome/free-solid-svg-icons": "^6.6.0",
+		"@fortawesome/svelte-fontawesome": "^0.2.2",
 		"firebase": "^10.13.2",
 		"flamewatch": "file:",
 		"lucide-svelte": "^0.446.0"
