@@ -171,7 +171,7 @@ import { faLightbulb, faPlug, faCouch, faUtensils, faBed, faGamepad, faTshirt, f
               <div class="room-icon-circle">
                 <FontAwesomeIcon icon={faLightbulb} class="product-icon" />
               </div>
-              <a href="/user"> <!-- Change this to your target page -->
+              <a href="../simulation"> <!-- Change this to your target page -->
                 <div class="room-icon-circle">
                     <FontAwesomeIcon icon={faHouseFire} class="product-icon" />
                 </div>
