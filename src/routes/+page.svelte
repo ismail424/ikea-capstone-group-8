@@ -204,7 +204,7 @@
 			<p class="text-lg font-semibold text-gray-700">Team Members:</p>
 			<ul class="list-inside list-disc text-lg text-gray-600">
 				<li>
-					<a href="mailto:email@example.com" class="text-indigo-600 hover:text-indigo-800"
+					<a href="mailto:tobiaspe@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
 						>Tobias Pettersson</a
 					>
 				</li>
@@ -214,7 +214,7 @@
 					>
 				</li>
 				<li>
-					<a href="mailto:email@example.com" class="text-indigo-600 hover:text-indigo-800"
+					<a href="mailto:ismailh@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
 						>Ismail Al Horan</a
 					>
 				</li>
@@ -224,12 +224,12 @@
 					>
 				</li>
 				<li>
-					<a href="mailto:email@example.com" class="text-indigo-600 hover:text-indigo-800"
+					<a href="mailto:erking@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
 						>Filip Erking</a
 					>
 				</li>
 				<li>
-					<a href="mailto:email@example.com" class="text-indigo-600 hover:text-indigo-800"
+					<a href="mailto:simonada@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
 						>Simon Adamsson</a
 					>
 				</li>
