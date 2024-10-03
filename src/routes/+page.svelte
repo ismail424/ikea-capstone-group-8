@@ -10,7 +10,7 @@
 		<h1 class="text-5xl font-bold leading-tight">FlameWatch</h1>
 
 		<!-- Undertitle for FlameWatch -->
-		<h2 class="mt-2 text-3xl font-semibold text-black-700">TEK830</h2>
+		<h2 class="mt-2 text-3xl font-semibold text-black-700">TEK830 Digitalization and AI in practice</h2>
 		
 		<h2 class="mt-6 text-2xl font-light text-gray-500">
 			Leveraging Smart Home Data for Enhanced Safety in Europe
