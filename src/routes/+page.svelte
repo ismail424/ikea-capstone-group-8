@@ -213,7 +213,7 @@
 					>
 				</li>
 				<li>
-					<a href="mailto:email@example.com" class="text-indigo-600 hover:text-indigo-800"
+					<a href="mailto:kenph@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
 						>Ken Phu</a
 					>
 				</li>
@@ -223,7 +223,7 @@
 					>
 				</li>
 				<li>
-					<a href="mailto:email@example.com" class="text-indigo-600 hover:text-indigo-800"
+					<a href="mailto:ismails@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
 						>Ismail Sacic</a
 					>
 				</li>
