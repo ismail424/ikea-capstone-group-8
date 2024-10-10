@@ -1,8 +1,3 @@
-<script>
-	import { onMount } from 'svelte';
-	let hover = false;
-</script>
-
 <div class="container mx-auto px-4 lg:px-8">
 	<!-- Header Section -->
 	<header class="my-12 text-center">
@@ -22,21 +17,17 @@
 	<section
 		class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-xl md:px-12 lg:px-20"
 	>
-		<div class="mb-10 text-center">
-			<h3 class="mb-4 text-4xl font-bold text-gray-800">Project Overview</h3>
+		<div class="mb-16 text-center">
+			<h3 class="mb-4 text-4xl font-extrabold tracking-tight text-gray-800">Project Overview</h3>
 			<p class="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
 				With more people spending time away from their homes, ensuring safety from potential fire
 				hazards is becoming increasingly important. Traditional fire alarms might go unnoticed when
 				no one is home, creating a gap in security.
 			</p>
 		</div>
-	</section>
+		<br />
 
-	<!-- Smart Fire Alarm Section -->
-	<section
-		class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-xl md:px-12 lg:px-20"
-	>
-		<div class="mb-12 text-center">
+		<div class="mb-16 text-center">
 			<h3 class="mb-4 text-4xl font-extrabold tracking-tight text-gray-800">Discover FlameWatch</h3>
 			<p class="mx-auto max-w-2xl text-xl leading-relaxed text-gray-700">
 				FlameWatch, a smart fire alarm and a key part of our smart home ecosystem, ensures rapid
@@ -50,8 +41,9 @@
 			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
-						<!-- Smoke detection icon -->
-						<i class="fas fa-bell text-xl"></i>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+						</svg>
 					</div>
 					<h4 class="text-xl font-semibold text-gray-800">Real-time Detection</h4>
 				</div>
@@ -64,8 +56,9 @@
 			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
-						<!-- Notification icon -->
-						<i class="fas fa-mobile-alt text-xl"></i>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+						</svg>
 					</div>
 					<h4 class="text-xl font-semibold text-gray-800">Instant Alerts</h4>
 				</div>
@@ -78,8 +71,10 @@
 			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
-						<!-- Fire distinction icon -->
-						<i class="fas fa-fire-alt text-xl"></i>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+						</svg>
 					</div>
 					<h4 class="text-xl font-semibold text-gray-800">Smart Detection</h4>
 				</div>
@@ -92,8 +87,9 @@
 			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
-						<!-- Integration icon -->
-						<i class="fas fa-link text-xl"></i>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+						</svg>
 					</div>
 					<h4 class="text-xl font-semibold text-gray-800">App Integration</h4>
 				</div>
@@ -106,8 +102,9 @@
 			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
-						<!-- Energy-efficient icon -->
-						<i class="fas fa-battery-half text-xl"></i>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+						</svg>
 					</div>
 					<h4 class="text-xl font-semibold text-gray-800">Multi-Room Coverage</h4>
 				</div>
@@ -121,8 +118,9 @@
 			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
-						<!-- Protection icon -->
-						<i class="fas fa-shield-alt text-xl"></i>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+						</svg>
 					</div>
 					<h4 class="text-xl font-semibold text-gray-800">Continuous Protection</h4>
 				</div>
