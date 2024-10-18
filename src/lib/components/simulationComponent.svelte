@@ -4,7 +4,11 @@
   import { Flame, Home, Thermometer, Wind, AlertCircle, Phone, Battery, Clock } from 'lucide-svelte';
   import { get } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-  
+  import { notifications } from '$lib/notificationStore';
+    
+  function triggerNotification() {
+      notifications.add('There is a fire in the house, Calling Emergency Services');
+  }
   interface Sensor {
     id: string;
     type: 'brandvarnare' | 'spis';
@@ -110,6 +114,7 @@
     isFalseAlarm.set(false);
     smoothTransition('fire', 10000);
     notification.set('Brandsimulering startad. Observera sensorernas beteende.');
+    triggerNotification();
   }
   
   function spreadFire(): void {
