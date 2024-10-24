@@ -106,14 +106,6 @@
 		}
 		return 'unknown';
 	}
-
-	function deleteRoom(roomId: string) {
-		rooms.update((r) => r.filter((room) => room.id !== roomId));
-	}
-
-	function closeModal() {
-		showAddRoomModal.set(false);
-	}
 </script>
 
 <!-- Layout: FlameWatch Room Cards with Sensor Integration -->
@@ -206,7 +198,8 @@
 								<h4>{sensor.type}</h4>
 							</div>
 						</div>
-						<div class="sensor-data"></div>
+						<div class="sensor-data">
+						</div>
 						<div>{sensor.name} Status: {sensor.status}</div>
 					</div>
 				{:else if sensor.type === 'Temperatur'}
@@ -220,26 +213,23 @@
 
 	<!-- Add Room Modal -->
 	{#if $showAddRoomModal}
-		<div class="modal" on:click={closeModal}>
-			<div class="modal-content" on:click|stopPropagation>
-        <div class="modal-header">
-				<h3>Modify Room</h3>
-        <button on:click={closeModal}>X</button>
-        </div>
+		<div class="modal">
+			<div class="modal-content">
+				<h3>Add Room</h3>
+				<input type="text" bind:value={newRoomName} placeholder="Room Name" />
+				<button on:click={addRoom}>Add</button>
+				<button on:click={() => showAddRoomModal.set(false)}>Cancel</button>
+			</div>
+		</div>
+	{/if}
 
-				<!-- Text box for adding a new room -->
-				<input type="text" bind:value={newRoomName} placeholder="New Room Name" />
-				<button on:click={addRoom}>Add Room</button>
-
-				<!-- List of existing rooms with delete option -->
-				<ul>
-					{#each $rooms as room (room.id)}
-						<li>
-							{room.name}
-							<button on:click={() => deleteRoom(room.id)}>Delete</button>
-						</li>
-					{/each}
-				</ul>
+	<!-- Add Sensor Modal -->
+	{#if $showAddSensorModal && selectedRoomId}
+		<div class="modal">
+			<div class="modal-content">
+				<h3>Add Sensor to Room</h3>
+				<button on:click={() => addSensorToRoom(selectedRoomId)}>Add Sensor</button>
+				<button on:click={() => showAddSensorModal.set(false)}>Cancel</button>
 			</div>
 		</div>
 	{/if}
@@ -320,22 +310,14 @@
 		height: 100vh;
 		background: rgba(0, 0, 0, 0.5);
 		display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 150px;
+		justify-content: center;
+		align-items: center;
 	}
 	.modal-content {
 		background: white;
 		padding: 20px;
 		border-radius: 10px;
 		text-align: center;
-	}
-
-  .modal-header {
-		margin-top: 1px;
-		margin-bottom: 10px;
-		display: flex;
-		justify-content: space-between;
 	}
 
 	.room-header {
