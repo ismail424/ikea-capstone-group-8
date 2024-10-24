@@ -154,25 +154,22 @@
   }
 
   .card-name-icon {
-    background-color: none;
-    display: grid;
-    grid-template-columns: 2;
-    grid-template-rows: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
+  .card-name-icon h3{
+    padding-left: 10px;
   }
 
   .home-header h1 {
     font-weight: bold;
   }
-  .rooms {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-  }
   .room-card {
     padding: 15px;
     border-radius: 10px;
-    background-color: #fff;
+    background-color: #ffda23;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   }
   .sensor-row {
