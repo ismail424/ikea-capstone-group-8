@@ -2,17 +2,18 @@
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faCouch, faUtensils, faBed, faGamepad, faTshirt } from '@fortawesome/free-solid-svg-icons';
   import { writable, type Writable } from 'svelte/store';
-  import { Thermometer, Wind, Battery, AlarmSmoke, Pencil } from 'lucide-svelte';
+  import { Thermometer, Wind, Battery, AlarmSmoke, Pencil, Plug } from 'lucide-svelte';
   import { onMount } from 'svelte';
 
   interface Sensor {
     id: string;
-    type: 'brandvarnare' | 'uttag' | 'temp';
+    name?: string | null;
+    type: 'Brandvarnare' | 'Uttag' | 'Temperatur';
     status: string;
-    batteryLevel?: number;
-    temperature?: number;
-    smoke?: number;
-    CO2?: number;
+    batteryLevel?: number | null;
+    temperature?: number | null;
+    smoke?: number | null;
+    CO2?: number | null;
   }
 
   interface Room {
@@ -23,11 +24,11 @@
 
   let rooms: Writable<Room[]> = writable([
     { id: '1', name: 'Kök', sensors: [
-      { id: '1', type: 'brandvarnare', status: 'active', batteryLevel: 85, smoke: 0, CO2: 0 },
-      { id: '2', type: 'uttag', status: 'off' }
+      { id: '1', type: 'Brandvarnare', status: 'active', batteryLevel: 85, smoke: 0, CO2: 0 },
+      { id: '2', name: "Ugn", type: 'Uttag', status: 'off' }
     ]},
     { id: '2', name: 'Sovrum', sensors: [
-      { id: '3', type: 'brandvarnare', status: 'active', batteryLevel: 92, smoke: 0, CO2: 0 }
+      { id: '3', type: 'Brandvarnare', status: 'active', batteryLevel: 92, smoke: 0, CO2: 0 }
     ]}
   ]);
 
@@ -47,18 +48,18 @@
     showAddRoomModal.set(false);
   }
 
-  function addSensorToRoom(roomId: string | null) {
+  function addSensorToRoom(roomId: string | undefined | null) {
     rooms.update(r =>
       r.map(room => 
         room.id === roomId 
-        ? { ...room, sensors: [...room.sensors, { id: Date.now().toString(), type: 'brandvarnare', status: 'active' }] }
+        ? { ...room, sensors: [...room.sensors, { id: Date.now().toString(), type: 'Brandvarnare', status: 'active' }] }
         : room
       )
     );
     showAddSensorModal.set(false);
   }
 
-  function smokeToString(value: number | null){
+  function smokeToString(value: number | undefined | null){
     let newValue = value?.toFixed(1);
     if (value?.toFixed(1) != null){
       if(value < firstSmokeLimit){
@@ -69,9 +70,10 @@
         return "High!";
       }
     }
+    return "Unknown";
   }
 
-  function CO2ToString(value: number | null){
+  function CO2ToString(value: number | undefined | null){
     let newValue = value?.toFixed(1);
     if (value?.toFixed(1) != null){
       if(value < firstCO2Limit){
@@ -82,6 +84,7 @@
         return "High!";
       }
     }
+    return "unknown";
   }
 </script>
 
@@ -122,11 +125,14 @@
 
       <!-- List Sensors -->
       {#each room.sensors as sensor (sensor.id)}
+      {#if sensor.type === 'Brandvarnare'}
         <div class="sensor-row">
-          {#if sensor.type === 'brandvarnare'}
             <div class="sensor-header">
-              <div>
-                <AlarmSmoke class="h-4 w-4 text-blue-500" />
+              <div class="card-name-icon">
+              <div class="room-icon-circle">
+                <AlarmSmoke class="h-4 w-4 text-black-500" />
+              </div>
+              <h4>{sensor.type}</h4>
               </div>
               <div class="flex space-x-1">
                 <span class="text-[12px]">{sensor.batteryLevel}%</span>
@@ -134,19 +140,33 @@
               </div>
             </div>
             <div class="sensor-data">
+              <div>
               <span>Smoke:</span>
               <span>{smokeToString(sensor.smoke)}
               </span>
+              </div>
             </div>
-          {:else if sensor.type === 'uttag'}
-            <div>Uttag Status: {sensor.status}</div>
-            {:else if sensor.type === 'temp'}
+            <div class="sensor-data">
+              <div>
+                <span>CO2:</span>
+                <span>{CO2ToString(sensor.CO2)}</span>
+              </div>
+            </div>
+          </div>
+          {:else if sensor.type === 'Uttag'}
+          <div class="sensor-row">
+            <div class="sensor-header">
+              <div class="room-icon-circle">
+                <Plug class="h-4 w-4 text-black-500" />
+              </div>
+            </div>
+          </div>
+            <div>{sensor.name} Status: {sensor.status}</div>
+            {:else if sensor.type === 'Temperatur'}
             <div>
               <span>{sensor.temperature?.toFixed(1)} °C</span>
             </div>
             {/if}
-
-        </div>
       {/each}
     </div>
   {/each}
@@ -184,12 +204,20 @@
     background-color: #f8f8f8;
     font-family: 'Arial', sans-serif;
   }
-  .home-header, .card-header {
+  .home-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 3px;
 		padding-bottom: 15px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 3px;
+		padding-bottom: 5px;
   }
 
   .card-name-icon {
@@ -206,18 +234,25 @@
     font-weight: bold;
   }
   .room-card {
-    padding: 15px;
+    padding: 10px;
     border-radius: 10px;
     background-color: #ffda23;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 5px;
   }
   .sensor-row {
     margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 4px;
   }
   .sensor-header {
-    margin-top: 10px;
+    margin-top: 1px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
+   
   }
   .sensor-data {
     display: flex;
@@ -253,6 +288,17 @@
 		align-items: center;
 		padding-bottom: 7px;
 		padding-top: 3px;
+	}
+
+  .room-icon-circle {
+		background-color: #fffffff0 ;
+		border-radius: 50%;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 5px;
 	}
 
   .living-room { background-color: #99bbcf; }
