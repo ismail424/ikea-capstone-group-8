@@ -1,8 +1,8 @@
 <script lang="ts">
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-  import { faCouch, faUtensils, faBed, faGamepad, faTshirt, faPlus } from '@fortawesome/free-solid-svg-icons';
+  import { faCouch, faUtensils, faBed, faGamepad, faTshirt } from '@fortawesome/free-solid-svg-icons';
   import { writable, type Writable } from 'svelte/store';
-  import { Thermometer, Wind, Battery } from 'lucide-svelte';
+  import { Thermometer, Wind, Battery, AlarmSmoke, Pencil } from 'lucide-svelte';
   import { onMount } from 'svelte';
 
   interface Sensor {
@@ -12,6 +12,7 @@
     batteryLevel?: number;
     temperature?: number;
     smoke?: number;
+    CO2?: number;
   }
 
   interface Room {
@@ -22,11 +23,11 @@
 
   let rooms: Writable<Room[]> = writable([
     { id: '1', name: 'Kök', sensors: [
-      { id: '1', type: 'brandvarnare', status: 'active', batteryLevel: 85, temperature: 22, smoke: 0 },
+      { id: '1', type: 'brandvarnare', status: 'active', batteryLevel: 85, smoke: 0, CO2: 0 },
       { id: '2', type: 'uttag', status: 'off' }
     ]},
     { id: '2', name: 'Sovrum', sensors: [
-      { id: '3', type: 'brandvarnare', status: 'active', batteryLevel: 92, temperature: 21, smoke: 0 }
+      { id: '3', type: 'brandvarnare', status: 'active', batteryLevel: 92, smoke: 0, CO2: 0 }
     ]}
   ]);
 
@@ -34,6 +35,11 @@
   let showAddRoomModal = writable(false);
   let showAddSensorModal = writable(false);
   let selectedRoomId: string | null = null;
+  let firstSmokeLimit = 20; // Low limit for particles in the air
+  let secondSmokeLimit = 40; // High limit for particles in the air
+
+  let firstCO2Limit = 20; // Low limit for CO2 in the air
+  let secondCO2Limit = 40; // High limit for CO2 in the air
 
   function addRoom() {
     rooms.update(r => [...r, { id: Date.now().toString(), name: newRoomName, sensors: [] }]);
@@ -51,6 +57,32 @@
     );
     showAddSensorModal.set(false);
   }
+
+  function smokeToString(value: number | null){
+    let newValue = value?.toFixed(1);
+    if (value?.toFixed(1) != null){
+      if(value < firstSmokeLimit){
+        return "Low";
+      } else if (value >= firstSmokeLimit && value < secondSmokeLimit){
+        return "Medium";
+      } else{
+        return "High!";
+      }
+    }
+  }
+
+  function CO2ToString(value: number | null){
+    let newValue = value?.toFixed(1);
+    if (value?.toFixed(1) != null){
+      if(value < firstCO2Limit){
+        return "Low";
+      } else if (value >= firstCO2Limit && value < secondCO2Limit){
+        return "Medium";
+      } else{
+        return "High!";
+      }
+    }
+  }
 </script>
 
 <!-- Layout: FlameWatch Room Cards with Sensor Integration -->
@@ -62,7 +94,7 @@
   <div class="room-header">
     <h3>Rooms</h3>
     <button on:click={() => showAddRoomModal.set(true)} class="plus-button">
-      <FontAwesomeIcon icon={faPlus} />
+      <Pencil size=19 />
     </button>
   </div>
 
@@ -84,7 +116,7 @@
       <h3>{room.name}</h3>
     </div>
         <button on:click={() => { selectedRoomId = room.id; showAddSensorModal.set(true); }} class="plus-button">
-          <FontAwesomeIcon icon={faPlus} />
+          <Pencil size=19 />
         </button>
       </div>
 
@@ -92,21 +124,28 @@
       {#each room.sensors as sensor (sensor.id)}
         <div class="sensor-row">
           {#if sensor.type === 'brandvarnare'}
-            <div>
-              <Thermometer class="h-4 w-4 text-blue-500" />
-              <span>{sensor.temperature?.toFixed(1)} °C</span>
+            <div class="sensor-header">
+              <div>
+                <AlarmSmoke class="h-4 w-4 text-blue-500" />
+              </div>
+              <div class="flex space-x-1">
+                <span class="text-[12px]">{sensor.batteryLevel}%</span>
+                <Battery class="h-4 w-4 text-green-500"/>
+              </div>
             </div>
-            <div>
-              <Wind class="h-4 w-4 text-gray-500" />
-              <span>{sensor.smoke?.toFixed(1)}%</span>
-            </div>
-            <div>
-              <Battery class="h-4 w-4 text-green-500" />
-              <span>{sensor.batteryLevel}%</span>
+            <div class="sensor-data">
+              <span>Smoke:</span>
+              <span>{smokeToString(sensor.smoke)}
+              </span>
             </div>
           {:else if sensor.type === 'uttag'}
-            <div>Status: {sensor.status}</div>
-          {/if}
+            <div>Uttag Status: {sensor.status}</div>
+            {:else if sensor.type === 'temp'}
+            <div>
+              <span>{sensor.temperature?.toFixed(1)} °C</span>
+            </div>
+            {/if}
+
         </div>
       {/each}
     </div>
@@ -174,6 +213,13 @@
   }
   .sensor-row {
     margin-top: 10px;
+  }
+  .sensor-header {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .sensor-data {
     display: flex;
     justify-content: space-between;
   }
