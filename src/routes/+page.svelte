@@ -1,21 +1,60 @@
-<div class="container mx-auto px-4 lg:px-8">
+<script lang="ts">
+	import { Play } from 'lucide-svelte';
+</script>
+
+<div class="container mx-auto px-4 my-20 lg:px-8">
 	<!-- Header Section -->
-	<header class="my-12 text-center">
-		<img src="chalmers_logo.png" alt="Chalmers Logo" class="mx-auto mb-6 w-32" />
-		<h1 class="text-5xl font-bold leading-tight">FlameWatch</h1>
+	<header class="my-36 text-center">
+		<img src="chalmers_logo.png" alt="Chalmers Logo" class="mx-auto mb-6 w-52" />
+		<h1 class="text-5xl font-bold leading-tight text-indigo-600 border-b-2 border-indigo-600 text-indigo-600 inline-block">FlameWatch</h1>
 
 		<!-- Undertitle for FlameWatch -->
 		<h2 class="mt-2 text-3xl font-semibold text-black-700">TEK830 Digitalization and AI in practice</h2>
 		
-		<h2 class="mt-6 text-2xl font-light text-gray-500">
+		<h2 class="mt-4 text-2xl font-light text-gray-700">
 			Leveraging Smart Home Data for Enhanced Safety in Europe
 		</h2>
 	</header>
 
+<!-- Video & Presentation Grid -->
+<div class="grid gap-8  mx-auto my-20 max-w-7xl rounded-xl ">
+	<!-- Video Section -->
+	<div class="rounded-xl bg-white shadow-md border-2 border-gray-200 overflow-hidden border-2 border-gray-200">
+		<div class="p-6 border-b border-gray-200">
+			<h3 class="text-2xl font-bold text-center text-gray-800">Project Demo</h3>
+		</div>
+		<div class="aspect-video w-full bg-gray-100">
+			<div class="flex h-full flex-col items-center justify-center p-8 space-y-4">
+				<Play class="h-16 w-16 text-gray-400" />
+				<p class="text-lg text-gray-500">Project demonstration video coming soon</p>
+				<button class="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors">
+					Watch Demo
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Presentation Section -->
+	<div class="rounded-xl bg-white shadow-md border-2 border-gray-200 overflow-hidden">
+		<div class="p-6 border-b border-gray-200">
+			<h3 class="text-2xl font-bold text-center text-gray-800">Presentation Slides</h3>
+		</div>
+		<div class="w-full bg-gray-100">
+			<iframe 
+				class="w-full h-[600px] md:h-[800px] lg:h-[1000px]" 
+				src="https://docs.google.com/presentation/d/e/2PACX-1vTP30jtX4R7dSdA8HvAaBrYTmCCJpH9Au5uVZAinvIrl9YvACrQDQBEtIDoOKLRbEKZWx2fDit8M9QS/embed?start=true&loop=false&delayms=10000" 
+				frameborder="0" 
+				allowfullscreen 
+				title="Project Presentation Slides">
+			</iframe>
+		</div>
+	</div>
+</div>
+
 
 	<!-- Project Overview Section -->
 	<section
-		class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-xl md:px-12 lg:px-20"
+		class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-md border-2 border-gray-200 md:px-12 lg:px-20"
 	>
 		<div class="mb-16 text-center">
 			<h3 class="mb-4 text-4xl font-extrabold tracking-tight text-gray-800">Project Overview</h3>
@@ -38,7 +77,7 @@
 
 		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
 			<!-- Feature 1 -->
-			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-md border-2 border-gray-200">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,7 +92,7 @@
 			</div>
 
 			<!-- Feature 2 -->
-			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-md border-2 border-gray-200">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,7 +107,7 @@
 			</div>
 
 			<!-- Feature 3 -->
-			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-md border-2 border-gray-200">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,7 +123,7 @@
 			</div>
 
 			<!-- Feature 4 -->
-			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-md border-2 border-gray-200">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +138,7 @@
 			</div>
 
 			<!-- Feature 5 -->
-			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-md border-2 border-gray-200">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -115,7 +154,7 @@
 			</div>
 
 			<!-- Feature 6 -->
-			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-xl">
+			<div class="rounded-lg bg-white p-6 shadow-lg transition-shadow duration-300 hover:shadow-md border-2 border-gray-200">
 				<div class="mb-4 flex items-center space-x-4">
 					<div class="rounded-full bg-indigo-500 p-4 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,7 +181,7 @@
 			Aligning with Design Thinking Principles
 		</h3>
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-			<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+			<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md border-2 border-gray-200">
 				<h4 class="mb-4 text-xl font-bold text-gray-700">Usability</h4>
 				<p class="text-gray-600">
 					Many users expressed concerns about potential home issues, like forgetting to turn off
@@ -153,7 +192,7 @@
 					mind, enhancing both security and convenience.
 				</p>
 			</div>
-			<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+			<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md border-2 border-gray-200">
 				<h4 class="mb-4 text-xl font-bold text-gray-700">Feasibility</h4>
 				<p class="text-gray-600">
 					Our smart fire alarm is highly feasible because the technology smoke detectors, wireless
@@ -163,7 +202,7 @@
 					technologies, making it both practical and cost-effective to implement
 				</p>
 			</div>
-			<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+			<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md border-2 border-gray-200">
 				<h4 class="mb-4 text-xl font-bold text-gray-700">Viability</h4>
 				<p class="text-gray-600">
 					Our smart fire alarm naturally fits with IKEA’s brand by enhancing everyday safety in an
@@ -178,7 +217,7 @@
 	</section>
 
 	<section
-		class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-xl md:px-12 lg:px-20"
+		class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-md border-2 border-gray-200 md:px-12 lg:px-20"
 	>
 		<div class="mb-10 text-center">
 			<h3 class="mb-4 text-4xl font-bold text-gray-800">Initial Demo</h3>
@@ -191,7 +230,7 @@
 
 		<div class="mt-10 flex justify-center">
 			<button
-				class="transform rounded-full bg-indigo-600 px-10 py-4 text-lg font-medium text-white shadow-lg transition duration-300 ease-in-out hover:-translate-y-1 hover:bg-indigo-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-300"
+				class="transform rounded-full bg-indigo-600 px-10 py-4 text-lg font-medium text-white shadow-lg transition duration-300 ease-in-out hover:-translate-y-1 hover:bg-indigo-700 hover:shadow-md border-2 border-gray-200 focus:outline-none focus:ring-4 focus:ring-indigo-300"
 				on:click={() => (window.location.href = '/simulation/app-Home')}
 			>
 				View Simulation
@@ -200,47 +239,36 @@
 	</section>
 
 	<!-- Team Section -->
-	<section class="my-16">
-		<h3 class="mb-8 text-center text-3xl font-semibold text-gray-700">Meet the Team</h3>
-		<div class="flex flex-col items-center space-y-8">
+	<section class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-md border-2 border-gray-200 md:px-12 lg:px-20">
+		<h3 class="max-w-7xl mb-8 text-center text-3xl font-semibold text-gray-700">Meet the Team</h3>
+		<div class="flex flex-col space-y-8">
 			<p class="text-lg font-semibold text-gray-700">Team Members:</p>
-			<ul class="list-inside list-disc text-lg text-gray-600">
+			<ul class="grid grid-cols-1 md:grid-cols-2 list-inside list-disc gap-4 text-lg text-gray-600">
 				<li>
-					<a href="mailto:tobiaspe@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
-						>Tobias Pettersson</a
-					>
+					<a href="mailto:tobiaspe@chalmers.se" class="text-indigo-600 hover:text-indigo-800">Tobias Pettersson</a>
 				</li>
 				<li>
-					<a href="mailto:kenph@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
-						>Ken Phu</a
-					>
+					<a href="mailto:kenph@chalmers.se" class="text-indigo-600 hover:text-indigo-800">Ken Phu</a>
 				</li>
 				<li>
-					<a href="mailto:ismailh@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
-						>Ismail Al Horan</a
-					>
+					<a href="mailto:ismailh@chalmers.se" class="text-indigo-600 hover:text-indigo-800">Ismail Al Horan</a>
 				</li>
 				<li>
-					<a href="mailto:ismails@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
-						>Ismail Sacic</a
-					>
+					<a href="mailto:ismails@chalmers.se" class="text-indigo-600 hover:text-indigo-800">Ismail Sacic</a>
 				</li>
 				<li>
-					<a href="mailto:erking@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
-						>Filip Erking</a
-					>
+					<a href="mailto:erking@chalmers.se" class="text-indigo-600 hover:text-indigo-800">Filip Erking</a>
 				</li>
 				<li>
-					<a href="mailto:simonada@chalmers.se" class="text-indigo-600 hover:text-indigo-800"
-						>Simon Adamsson</a
-					>
+					<a href="mailto:simonada@chalmers.se" class="text-indigo-600 hover:text-indigo-800">Simon Adamsson</a>
 				</li>
 			</ul>
 		</div>
 	</section>
+	
 
 	<!-- References Section -->
-	<section class="my-16 rounded-lg bg-gray-50 px-6 py-12 shadow-md">
+	<section class="mx-auto my-20 max-w-7xl rounded-xl bg-white px-6 py-16 shadow-md border-2 border-gray-200 md:px-12 lg:px-20">
 		<h3 class="mb-8 text-center text-3xl font-semibold text-gray-700">References</h3>
 		<ul class="list-inside list-disc text-lg text-gray-600">
 			<li>
@@ -263,3 +291,31 @@
 		</ul>
 	</section>
 </div>
+
+
+<style>
+	/* Fix scroll bar so it  looks like mac */
+	:global(::-webkit-scrollbar) {
+		background-color: #fff;
+		width: 16px;
+	}
+	:global(::-webkit-scrollbar-thumb) {
+		background-color: #babac0;
+		border-radius: 16px;
+		border: 4px solid #fff;
+	}
+	:global(::-webkit-scrollbar-button) {
+		display: none;
+	}
+	:global(::-webkit-scrollbar-track) {
+		background-color: #fff;
+	}
+
+	:global(body) {
+    background-image: url("dot-grid.png");
+}
+
+
+
+
+</style>
