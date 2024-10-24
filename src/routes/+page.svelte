@@ -312,7 +312,7 @@
 	}
 
 	:global(body) {
-    background-image: url("dot-grid.png");
+    background-image: url("/dot-grid.png");
 }
 
 
