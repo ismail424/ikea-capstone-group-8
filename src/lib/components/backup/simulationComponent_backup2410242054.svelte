@@ -1,3 +1,17 @@
+
+Function for adding and removing sensor:
+A modal should open with the name modify sensors.
+It should be very similar to the room modal. But the sensors should be chosen from a 
+dropdown menu wich responds to type of sensor in sensor interface
+and then it should generate and id and you should be able to change name. Depending on the type the sensor should have different
+properties. Brandvarnare has batteryLevel, smoke, CO2 and so on
+
+TODO:::
+Beautify the modals!
+Se till att app-Home och Flamewatch ser lika ut i designen
+Ändra så länken till Flamewatch är Flamewatch och inte Simulation
+
+
 <script lang="ts">
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import {
@@ -8,14 +22,14 @@
 		faTshirt
 	} from '@fortawesome/free-solid-svg-icons';
 	import { writable, type Writable } from 'svelte/store';
-	import { Thermometer, Wind, Battery, AlarmSmoke, Pencil, Plug, X } from 'lucide-svelte';
+	import { Thermometer, Wind, Battery, AlarmSmoke, Pencil, Plug } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 
 	interface Sensor {
 		id: string;
 		name?: string | null;
 		type: 'Brandvarnare' | 'Uttag' | 'Temperatur';
-		status?: string;
+		status: string;
 		batteryLevel?: number | null;
 		temperature?: number | null;
 		smoke?: number | null;
@@ -48,21 +62,35 @@
 
 	let newRoomName = '';
 	let showAddRoomModal = writable(false);
-	let newSensorName = '';
 	let showAddSensorModal = writable(false);
-	let selectedRoomId: string | '';
-
+	let selectedRoomId: string | null = null;
 	let firstSmokeLimit = 20; // Low limit for particles in the air
 	let secondSmokeLimit = 40; // High limit for particles in the air
+
 	let firstCO2Limit = 20; // Low limit for CO2 in the air
 	let secondCO2Limit = 40; // High limit for CO2 in the air
-
-	let selectedSensorType: Sensor['type'] = 'Brandvarnare';
-	let newSensorProperties: Partial<Sensor> = {};
 
 	function addRoom() {
 		rooms.update((r) => [...r, { id: Date.now().toString(), name: newRoomName, sensors: [] }]);
 		newRoomName = '';
+		showAddRoomModal.set(false);
+	}
+
+	function addSensorToRoom(roomId: string | undefined | null) {
+		rooms.update((r) =>
+			r.map((room) =>
+				room.id === roomId
+					? {
+							...room,
+							sensors: [
+								...room.sensors,
+								{ id: Date.now().toString(), type: 'Brandvarnare', status: 'active' }
+							]
+						}
+					: room
+			)
+		);
+		showAddSensorModal.set(false);
 	}
 
 	function smokeToString(value: number | undefined | null) {
@@ -99,63 +127,8 @@
 
 	function closeModal() {
 		showAddRoomModal.set(false);
-		showAddSensorModal.set(false);
 	}
-
-	function addSensorToRoom(roomId: string | null) {
-		rooms.update((r) =>
-			r.map((room) =>
-				room.id === roomId
-					? {
-							...room,
-							sensors: [
-								...room.sensors,
-								{
-									id: Date.now().toString(),
-									name: newSensorName || '',
-									type: selectedSensorType,
-									...newSensorProperties
-								}
-							]
-						}
-					: room
-			)
-		);
-		resetSensorForm();
-	}
-
-	// Reset form after sensor is added
-	function resetSensorForm() {
-		newSensorName = '';
-		selectedSensorType = 'Brandvarnare';
-		newSensorProperties = {};
-	}
-
-	// Delete sensor
-	function deleteSensor(roomId: string, sensorId: string) {
-		rooms.update((r) =>
-			r.map((room) =>
-				room.id === roomId
-					? { ...room, sensors: room.sensors.filter((sensor) => sensor.id !== sensorId) }
-					: room
-			)
-		);
-	}
-
-	// Update properties dynamically based on selected type
-	$: newSensorProperties =
-		selectedSensorType === 'Brandvarnare'
-			? { batteryLevel: 100, smoke: 0, CO2: 0 }
-			: selectedSensorType === 'Uttag'
-				? { status: 'off' }
-				: { temperature: 0 };
 </script>
-
-TODO::: > Se till att app-Home och Flamewatch har liknande design > Ändra så
-länken till Flamewatch är Flamewatch och inte Simulation > Ändra i Lägg till sensors så man inte
-manuellt lägger till så mycket info > Kolla buggen med att lägga till flera brandvarnare, är det samma för uttag? 
-Är det något i backend så man bara kan lägga till ett visst antal. Den behöver initsiera ny simulation för alla nya sensorer.
-
 
 <!-- Layout: FlameWatch Room Cards with Sensor Integration -->
 <div class="app-container">
@@ -164,7 +137,7 @@ manuellt lägger till så mycket info > Kolla buggen med att lägga till flera b
 	</div>
 
 	<div class="room-header">
-		<h3>Rum</h3>
+		<h3>Rooms</h3>
 		<button on:click={() => showAddRoomModal.set(true)} class="plus-button">
 			<Pencil size="19" />
 		</button>
@@ -226,7 +199,7 @@ manuellt lägger till så mycket info > Kolla buggen med att lägga till flera b
 						</div>
 						<div class="sensor-data">
 							<div>
-								<span>Partiklar:</span>
+								<span>Smoke:</span>
 								<span>{smokeToString(sensor.smoke)} </span>
 							</div>
 						</div>
@@ -261,30 +234,23 @@ manuellt lägger till så mycket info > Kolla buggen med att lägga till flera b
 
 	<!-- Add Room Modal -->
 	{#if $showAddRoomModal}
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="modal" on:click={closeModal}>
 			<div class="modal-content" on:click|stopPropagation>
-				<div class="modal-header">
-					<h3 class="font-bold">Lägg till/ta bort rum</h3>
-					<button on:click={closeModal}><X /></button>
-				</div>
+        <div class="modal-header">
+				<h3>Modify Room</h3>
+        <button on:click={closeModal}>X</button>
+        </div>
 
 				<!-- Text box for adding a new room -->
-				<div class="modal-room-row mb-5">
-					<input type="text" bind:value={newRoomName} placeholder="Rumsnamn" />
-					<button class="button" on:click={addRoom}>Lägg till</button>
-				</div>
+				<input type="text" bind:value={newRoomName} placeholder="New Room Name" />
+				<button on:click={addRoom}>Add Room</button>
+
 				<!-- List of existing rooms with delete option -->
-				<ul class="modal-room-ul">
+				<ul>
 					{#each $rooms as room (room.id)}
-						<li class="modal-room-li">
-							<div class="modal-room-row">
-								{room.name}
-								<button class="button" on:click={() => deleteRoom(room.id)}>Ta bort</button>
-							</div>
+						<li>
+							{room.name}
+							<button on:click={() => deleteRoom(room.id)}>Delete</button>
 						</li>
 					{/each}
 				</ul>
@@ -292,52 +258,18 @@ manuellt lägger till så mycket info > Kolla buggen med att lägga till flera b
 		</div>
 	{/if}
 
-	<!-- Sensor Modal -->
-	{#if $showAddSensorModal && selectedRoomId}
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div class="modal" on:click={closeModal}>
-			<div class="modal-content" on:click|stopPropagation>
-				<div class="modal-header">
-					<h3 class="font-bold">Lägg till / Ta bort sensor</h3>
-					<button on:click={closeModal}><X /></button>
-				</div>
-				<!-- Dropdown for Sensor Type -->
-				<div class="modal-room-row mb-5">
-					<label for="sensor-type">Sensortyp:</label>
-					<select class="ml-2" id="sensor-type" bind:value={selectedSensorType}>
-						<option value="Brandvarnare">Brandvarnare</option>
-						<option value="Uttag">Uttag</option>
-						<option value="Temperatur">Temperatur</option>
-					</select>
-				</div>
-				<div class="modal-room-row mb-3">
-					<!-- {#if selectedSensorType != "Brandvarnare"} -->
-					<label for="sensor-name">Sensornamn:</label>
-					<input class="ml-2" id="sensor-name" type="text" placeholder="Sensornamn" bind:value={newSensorName} />
-					<!-- {/if} -->
-				</div>
-				<div class="flex justify-end">
-					<button class="button" on:click={() => addSensorToRoom(selectedRoomId)}>Lägg till</button>
-				</div>
-
-				<!-- Existing Sensors -->
-				<h3>Tillagda</h3>
-        <ul class="modal-room-ul">
-				{#each $rooms.find((room) => room.id === selectedRoomId)?.sensors ?? [] as sensor}
-        <li class="modal-room-li">
-          <div class="modal-room-row">
-						<h4>{sensor.name || ""} ({sensor.type})</h4>
-						<button class="button" on:click={() => deleteSensor(selectedRoomId, sensor.id)}>Ta bort</button>
-					</div>
-				{/each}
+  {#if $showAddSensorModal && selectedRoomId}
+		<div class="modal">
+			<div class="modal-content">
+				<h3>Add Sensor to Room</h3>
+				<button on:click={() => addSensorToRoom(selectedRoomId)}>Add Sensor</button>
+				<button on:click={() => showAddSensorModal.set(false)}>Cancel</button>
 			</div>
 		</div>
 	{/if}
 </div>
 
+<!-- CSS -->
 <style>
 	.app-container {
 		max-width: 375px;
@@ -412,76 +344,22 @@ manuellt lägger till så mycket info > Kolla buggen med att lägga till flera b
 		height: 100vh;
 		background: rgba(0, 0, 0, 0.5);
 		display: flex;
-		justify-content: center;
-		align-items: flex-start;
-		padding-top: 150px;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 150px;
 	}
 	.modal-content {
-		background: #f8f8f8ff;
+		background: white;
 		padding: 20px;
 		border-radius: 10px;
 		text-align: center;
 	}
 
-	.modal-header {
+  .modal-header {
 		margin-top: 1px;
 		margin-bottom: 10px;
 		display: flex;
 		justify-content: space-between;
-	}
-
-	.modal-room-row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.modal-room-ul {
-		padding: 0px;
-		list-style-type: none;
-		border-radius: 5px;
-		overflow: hidden;
-	}
-	.modal-room-li {
-		background-color: rgb(227, 227, 227);
-		padding: 2px;
-		padding-left: 10px;
-	}
-
-	.modal-room-ul li:nth-child(even) {
-		background: #b5b5b5;
-	}
-
-	.button {
-		margin-left: 5px;
-		padding: 4px 10px;
-		border: 0px;
-		font-size: 12px;
-		transition: all 150ms ease-in-out;
-
-		border-radius: 7px;
-		font-weight: 400;
-
-		color: #000;
-		background: #d2d0d0;
-		box-shadow:
-			rgba(50, 50, 93, 0.25) 0 50px 100px -20px,
-			rgba(0, 0, 0, 0.3) 0 30px 60px -30px,
-			rgba(10, 37, 64, 0.05) 0 -2px 6px 0 inset,
-			rgba(0, 0, 0, 0.02) 0 1px 3px 0,
-			rgba(27, 31, 35, 0) 0 0 0 1px;
-	}
-
-	input[type='text'] {
-		font-size: 16px;
-		max-height: 28px;
-	}
-	.button:hover {
-		background: #f9f9f9;
-	}
-
-	.button:active {
-		transform: scale(0.95);
 	}
 
 	.room-header {
