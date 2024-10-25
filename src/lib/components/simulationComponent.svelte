@@ -152,8 +152,7 @@
 </script>
 
 TODO::: > Se till att app-Home och Flamewatch har liknande design > Ändra så
-länken till Flamewatch är Flamewatch och inte Simulation > Ändra i Lägg till sensors så man inte
-manuellt lägger till så mycket info > Kolla buggen med att lägga till flera brandvarnare, är det samma för uttag? 
+länken till Flamewatch är Flamewatch och inte Simulation > Kolla buggen med att lägga till flera brandvarnare, är det samma för uttag? 
 Är det något i backend så man bara kan lägga till ett visst antal. Den behöver initsiera ny simulation för alla nya sensorer.
 
 
