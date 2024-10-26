@@ -59,7 +59,7 @@
 				<div class="room-icon-circle">
 					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
 				</div>
-				<a href="../simulation">
+				<a href="../flamewatch">
 					<div class="room-icon-circle">
 						<FontAwesomeIcon icon={faHouseFire} class="product-icon" />
 					</div>
