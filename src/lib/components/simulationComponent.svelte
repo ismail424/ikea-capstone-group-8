@@ -50,15 +50,15 @@
 			id: '1',
 			name: 'Kök',
 			sensors: [
-				{ id: '1', type: 'Brandvarnare', status: 'active', batteryLevel: 85, smoke: 0, CO: 0 },
-				{ id: '2', name: 'Ugn', type: 'Uttag', status: 'off' }  // Changed initial status to 'off'
+				{ id: '1', type: 'Brandvarnare', status: 'active', batteryLevel: 85, smoke: 0, CO: 0, temperature: 24 },
+				{ id: '2', name: 'Spis', type: 'Uttag', status: 'off' },  // Changed initial status to 'off'
 			]
 		},
 		{
 			id: '2',
 			name: 'Sovrum',
 			sensors: [
-				{ id: '3', type: 'Brandvarnare', status: 'active', batteryLevel: 92, smoke: 0, CO: 0 }
+				{ id: '3', type: 'Brandvarnare', status: 'active', batteryLevel: 92, smoke: 0, CO: 0, temperature: 24 }
 			]
 		}
 	]);
@@ -91,11 +91,11 @@
 		let newValue = value?.toFixed(1);
 		if (value?.toFixed(1) != null) {
 			if (value < firstSmokeLimit) {
-				return 'Low';
+				return 'Låg';
 			} else if (value >= firstSmokeLimit && value < secondSmokeLimit) {
-				return 'Medium';
+				return 'Mellan';
 			} else {
-				return 'High!';
+				return 'Hög';
 			}
 		}
 		return 'Unknown';
@@ -105,11 +105,11 @@
 		let newValue = value?.toFixed(1);
 		if (value?.toFixed(1) != null) {
 			if (value < firstCOLimit) {
-				return 'Low';
+				return 'Låg';
 			} else if (value >= firstCOLimit && value < secondCOLimit) {
-				return 'Medium';
+				return 'Mellan';
 			} else {
-				return 'High!';
+				return 'Hög';
 			}
 		}
 		return 'unknown';
@@ -143,23 +143,26 @@
             ...room,
             sensors: room.sensors.map((sensor) => {
                 if (
-                    sensor.type === 'Brandvarnare' &&
                     sensor.CO !== undefined &&
                     sensor.smoke !== undefined &&
                     sensor.batteryLevel !== undefined &&
                     sensor.CO !== null &&
                     sensor.smoke !== null &&
-                    sensor.batteryLevel !== null
+                    sensor.batteryLevel !== null &&
+                    sensor.temperature !== undefined &&
+                    sensor.temperature !== null
+
                 ) {
                     const isKitchen = room.name === 'Kök';
                     // Smaller variations for bedroom sensors
                     const variationMultiplier = isKitchen ? 1 : 0.7;
                     
-                    const tempVariation = (Math.random() - 0.5) * 3 * variationMultiplier;
+                    const tempVariation = (Math.random() - 0.5) * 1 * variationMultiplier;
                     const smokeVariation = Math.random() * 1 * variationMultiplier;
                     const coVariation = (Math.random() - 0.5) * 2 * variationMultiplier;
                     const batteryDrain = Math.random() * 0.2;
 
+                    const newTemp = Math.round((sensor.temperature + tempVariation) * 10) / 10;
                     const newCO = Math.max(0, Math.round((sensor.CO + coVariation) * 10) / 10);
                     const newSmoke = Math.max(0, Math.round((sensor.smoke + smokeVariation) * 10) / 10);
                     const newBattery = Math.max(0, Math.round(sensor.batteryLevel - batteryDrain));
@@ -167,7 +170,7 @@
 
                     return {
                         ...sensor,
-                        temperature: newCO,
+                        temperature: newTemp,
                         smoke: newSmoke,
                         CO: newCO,
                         batteryLevel: newBattery,
@@ -212,9 +215,10 @@
                     // Check if sensor is a smoke detector in either Kitchen or Bedroom
                     if (
                         (room.name === 'Kök' || room.name === 'Sovrum') &&
-                        sensor.type === 'Brandvarnare' &&
+                        (sensor.type === 'Brandvarnare' || sensor.type === "Temperatur") &&
                         sensor.temperature !== undefined &&
-                        sensor.smoke !== undefined
+                        sensor.smoke !== undefined && 
+                        sensor.temperature != null
                     ) {
                         // Adjust targets based on room (bedroom gets lower values due to distance)
                         const isKitchen = room.name === 'Kök';
@@ -229,6 +233,10 @@
                         const targetCO = targetState === 'false-alarm'
                             ? (isKitchen ? 35 : 25)  // Lower CO in bedroom
                             : (isKitchen ? 75 : 55); // Lower CO in bedroom during fire
+                          
+                        const targetTemperature = targetState === 'false-alarm'
+                            ? (isKitchen ? 30 : 26)  // Lower temperature in bedroom
+                            : (isKitchen ? 55 : 40); // Lower temperature in bedroom during fire
                         
                         // Apply delayed effect to bedroom (simulate smoke spreading)
                         const roomDelay = isKitchen ? 0 : 0.3; // 30% delay for bedroom
@@ -245,9 +253,10 @@
                             const newSmoke =
                                 Math.round((sensor.smoke + (targetSmoke - sensor.smoke) * adjustedProgress) * 10) / 10;
                             const newStatus = determineStatus(newCO, newSmoke);
+                            const newTemp = Math.round((sensor.temperature + (targetTemperature - sensor.temperature) * adjustedProgress) * 10) / 10;
                             return { 
                                 ...sensor, 
-                                temperature: newCO, 
+                                temperature: newTemp, 
                                 smoke: newSmoke, 
                                 CO: newCO, 
                                 status: newStatus 
@@ -322,6 +331,7 @@ function startFalseAlarm(): void {
 	}
 
 	function addSensorToRoom(roomId: string | null) {
+    newSensorProperties = {status: 'active', batteryLevel: 85, smoke: 0, CO: 0, temperature: 24}
 		rooms.update((r) =>
 			r.map((room) =>
 				room.id === roomId
@@ -493,7 +503,7 @@ function startFalseAlarm(): void {
               </div>
             </div>
             <div class="sensor-data">
-              <span>{sensor.temperature?.toFixed(1)} °C</span>
+              <span>{sensor.temperature} ºC</span>
             </div>
           </div>
 				{/if}
