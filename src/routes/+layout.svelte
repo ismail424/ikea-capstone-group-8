@@ -20,7 +20,7 @@
 	onMount(() => {
 	
 		notificationValue.subscribe((value) => {
-			if (value && currentPath !== '/admin' && currentPath !== '/flamewatch') {
+			if (value && currentPath !== '/admin') {
 					showNotification = true;
 					const jsonValue = JSON.parse(value);
 					currentNotification = jsonValue.message;
