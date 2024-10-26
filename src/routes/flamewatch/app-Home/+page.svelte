@@ -13,13 +13,25 @@
 		faHouseFire
 	} from '@fortawesome/free-solid-svg-icons';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-    import { Flame, Home, Thermometer, Wind, AlertCircle, Phone, Battery, Clock } from 'lucide-svelte';
 	import { FaceExplodeOutline } from 'flowbite-svelte-icons';
 </script>
 
 <div class="app-container">
 	<div class="home-header">
-		<h1>FlameWatch</h1>
+		<h1>My Home</h1>
+		<span><FontAwesomeIcon icon={faPlus} class="icon" /></span>
+	</div>
+
+	<!-- Action Cards -->
+	<div class="actions">
+		<div class="action-card">
+			<FontAwesomeIcon icon={faHome} class="action-icon" />
+			<h3 class="action-h3">Leaving home</h3>
+		</div>
+		<div class="action-card">
+			<FontAwesomeIcon icon={faSun} class="action-icon" />
+			<h3 class="action-h3">Good morning</h3>
+		</div>
 	</div>
 
 	<div class="room-header"><h3>Rooms</h3></div>
@@ -28,17 +40,16 @@
 	<div class="rooms">
 
 		<div class="room-card living-room">
-            <div class="card-header">
 			<span><FontAwesomeIcon icon={faCouch} class="icon" /></span>
-            <h3>Living Room</h3>
-            <div class="alarm-oval">Alarm</div>
-            <span><FontAwesomeIcon icon={faPlus} class="icon" /></span>
-        </div>
-			
+			<h3>Living Room</h3>
 			<div class="room-product-icons">
-                    <Thermometer class="h-4 w-4 text-blue-500" />
-                    <span> 37,5 °C</span>
-                    </div>
+				<div class="room-icon-circle">
+					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
+				</div>
+				<div class="room-icon-circle">
+					<FontAwesomeIcon icon={faPlug} class="room-icon" />
+				</div>
+			</div>
 		</div>
 
 		<div class="room-card kitchen">
@@ -48,7 +59,7 @@
 				<div class="room-icon-circle">
 					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
 				</div>
-				<a href="../simulation">
+				<a href="../flamewatch">
 					<div class="room-icon-circle">
 						<FontAwesomeIcon icon={faHouseFire} class="product-icon" />
 					</div>
@@ -116,14 +127,6 @@
 		padding-bottom: 15px;
 	}
 
-    .card-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding-top: 3px;
-		padding-bottom: 15px;
-	}
-
 	.action-h3 {
 		margin-left: 10px;
 	}
@@ -133,13 +136,6 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding-bottom: 3px;
-		padding-top: 3px;
-	}
-
-    .progressbar {
-    	display: flex;
-		justify-items: space-between;
 		padding-bottom: 8px;
 		padding-top: 30px;
 	}
@@ -162,7 +158,7 @@
 
 	.rooms {
 		display: grid;
-		grid-template-columns: repeat(1 , 1fr);
+		grid-template-columns: repeat(2, 1fr);
 		grid-gap: 10px;
 	}
 
@@ -170,7 +166,7 @@
 		padding: 13px;
 		border-radius: 10px;
 		color: black;
-		text-align: left;
+		text-align: left; 
 	}
 
 	.living-room {
@@ -193,10 +189,9 @@
 	}
 
 	.icon {
-		color: black;   
+		color: black;
 		font-size: 1.5rem;
 		margin-bottom: 10px;
-
 	}
 
 	.action-icon {
@@ -229,26 +224,12 @@
 		margin-right: 5px;
 	}
 
-    .alarm-oval {
-		background-color: rgb(255, 74, 74);
-		color: black;
-		border-radius: 50px;
-		width: 70px;
-		height: 30px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		margin-right: 5px;
-		margin-left: 1px;
-
-	}
-
 	.room-product-icons {
 		color: black;
 		font-size: 1rem;
 		margin: 0;
 		display: flex;
-		justify-items: space-between;
+		justify-items: flex-start;
 	}
 
 	.room-card:hover {

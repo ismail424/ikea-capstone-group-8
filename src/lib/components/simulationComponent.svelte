@@ -51,7 +51,7 @@
 			name: 'Kök',
 			sensors: [
 				{ id: '1', type: 'Brandvarnare', status: 'active', batteryLevel: 85, smoke: 0, CO: 0 },
-				{ id: '2', name: 'Ugn', type: 'Uttag', status: 'off' }
+				{ id: '2', name: 'Ugn', type: 'Uttag', status: 'off' }  // Changed initial status to 'off'
 			]
 		},
 		{
@@ -138,59 +138,59 @@
 	}
 
 	function idleVariations(): void {
-		rooms.update((roomList) =>
-			roomList.map((room) => ({
-				...room,
-				sensors: room.sensors.map((sensor) => {
-					// Check if the sensor is a smoke detector and has the necessary properties
-					if (
-						sensor.type === 'Brandvarnare' &&
-						sensor.CO !== undefined &&
-						sensor.smoke !== undefined &&
-						sensor.batteryLevel !== undefined &&
-						sensor.CO !== null &&
-						sensor.smoke !== null &&
-						sensor.batteryLevel !== null
-					) {
-						const tempVariation = (Math.random() - 0.5) * 3;
-						const smokeVariation = Math.random() * 1;
-						const batteryDrain = Math.random() * 0.2;
+    rooms.update((roomList) =>
+        roomList.map((room) => ({
+            ...room,
+            sensors: room.sensors.map((sensor) => {
+                if (
+                    sensor.type === 'Brandvarnare' &&
+                    sensor.CO !== undefined &&
+                    sensor.smoke !== undefined &&
+                    sensor.batteryLevel !== undefined &&
+                    sensor.CO !== null &&
+                    sensor.smoke !== null &&
+                    sensor.batteryLevel !== null
+                ) {
+                    const isKitchen = room.name === 'Kök';
+                    // Smaller variations for bedroom sensors
+                    const variationMultiplier = isKitchen ? 1 : 0.7;
+                    
+                    const tempVariation = (Math.random() - 0.5) * 3 * variationMultiplier;
+                    const smokeVariation = Math.random() * 1 * variationMultiplier;
+                    const coVariation = (Math.random() - 0.5) * 2 * variationMultiplier;
+                    const batteryDrain = Math.random() * 0.2;
 
-						const newCO = Math.round((sensor.CO + tempVariation) * 10) / 10;
-						const newSmoke = Math.max(0, Math.round((sensor.smoke + smokeVariation) * 10) / 10);
-						const newBattery = Math.max(0, Math.round(sensor.batteryLevel - batteryDrain));
-						const newStatus = determineStatus(newCO, newSmoke);
+                    const newCO = Math.max(0, Math.round((sensor.CO + coVariation) * 10) / 10);
+                    const newSmoke = Math.max(0, Math.round((sensor.smoke + smokeVariation) * 10) / 10);
+                    const newBattery = Math.max(0, Math.round(sensor.batteryLevel - batteryDrain));
+                    const newStatus = determineStatus(newCO, newSmoke);
 
-						// Return updated sensor with modified properties
-						return {
-							...sensor,
-							temperature: newCO,
-							smoke: newSmoke,
-							batteryLevel: newBattery,
-							status: newStatus
-						};
-					}
+                    return {
+                        ...sensor,
+                        temperature: newCO,
+                        smoke: newSmoke,
+                        CO: newCO,
+                        batteryLevel: newBattery,
+                        status: newStatus
+                    };
+                }
+                return sensor;
+            })
+        }))
+    );
 
-					// Return the sensor unchanged if it's not a smoke detector
-					return sensor;
-				})
-			}))
-		);
-
-		// Randomly toggle the stove 10% of the time
-		if (Math.random() < 0.1) {
-			toggleStove();
-		}
-	}
+    if (Math.random() < 0.1) {
+        toggleStove();
+    }
+}
 
 	function toggleStove(): void {
 		rooms.update((roomList) =>
 			roomList.map((room) => ({
 				...room,
 				sensors: room.sensors.map((sensor) => {
-					if (sensor.id === '2') {
-						const newStatus = sensor.status === 'stove-on' ? 'stove-off' : 'stove-on';
-						return { ...sensor, status: newStatus };
+					if (sensor.id === '2' && sensor.type === 'Uttag') {
+						return { ...sensor, status: sensor.status === 'on' ? 'off' : 'on' };
 					}
 					return sensor;
 				})
@@ -198,103 +198,104 @@
 		);
 	}
 
+
 	function smoothTransition(targetState: 'false-alarm' | 'fire', duration: number): void {
-		const startTime = Date.now();
-		const interval = setInterval(() => {
-			const elapsedTime = Date.now() - startTime;
-			const progress = Math.min(elapsedTime / duration, 1);
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+        const elapsedTime = Date.now() - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
 
-			rooms.update((roomList) =>
-				roomList.map((room) => ({
-					...room,
-					sensors: room.sensors.map((sensor) => {
-						if (
-							room.name === 'Kök' &&
-							sensor.type === 'Brandvarnare' &&
-							sensor.temperature !== undefined &&
-							sensor.smoke !== undefined
-						) {
-							const targetTemp = targetState === 'false-alarm' ? 45 : 80;
-							const targetSmoke = targetState === 'false-alarm' ? 40 : 90;
-							if (
-								sensor.CO != undefined &&
-								sensor.CO != null &&
-								sensor.smoke != undefined &&
-								sensor.smoke != null
-							) {
-								const newCO =
-									Math.round((sensor.CO + (targetTemp - sensor.CO) * progress) * 10) / 10;
-								const newSmoke =
-									Math.round((sensor.smoke + (targetSmoke - sensor.smoke) * progress) * 10) / 10;
-								const newStatus = determineStatus(newCO, newSmoke);
-								return { ...sensor, temperature: newCO, smoke: newSmoke, status: newStatus };
-							}
-						}
-						return sensor;
-					})
-				}))
-			);
+        rooms.update((roomList) =>
+            roomList.map((room) => ({
+                ...room,
+                sensors: room.sensors.map((sensor) => {
+                    // Check if sensor is a smoke detector in either Kitchen or Bedroom
+                    if (
+                        (room.name === 'Kök' || room.name === 'Sovrum') &&
+                        sensor.type === 'Brandvarnare' &&
+                        sensor.temperature !== undefined &&
+                        sensor.smoke !== undefined
+                    ) {
+                        // Adjust targets based on room (bedroom gets lower values due to distance)
+                        const isKitchen = room.name === 'Kök';
+                        const targetTemp = targetState === 'false-alarm' 
+                            ? (isKitchen ? 45 : 35)  // Lower temp in bedroom
+                            : (isKitchen ? 80 : 60); // Lower temp in bedroom during fire
+                        
+                        const targetSmoke = targetState === 'false-alarm'
+                            ? (isKitchen ? 40 : 30)  // Lower smoke in bedroom
+                            : (isKitchen ? 90 : 70); // Lower smoke in bedroom during fire
+                        
+                        const targetCO = targetState === 'false-alarm'
+                            ? (isKitchen ? 35 : 25)  // Lower CO in bedroom
+                            : (isKitchen ? 75 : 55); // Lower CO in bedroom during fire
+                        
+                        // Apply delayed effect to bedroom (simulate smoke spreading)
+                        const roomDelay = isKitchen ? 0 : 0.3; // 30% delay for bedroom
+                        const adjustedProgress = Math.max(0, Math.min(1, (progress - roomDelay) * 1.5));
+                        
+                        if (
+                            sensor.CO != undefined &&
+                            sensor.CO != null &&
+                            sensor.smoke != undefined &&
+                            sensor.smoke != null
+                        ) {
+                            const newCO =
+                                Math.round((sensor.CO + (targetCO - sensor.CO) * adjustedProgress) * 10) / 10;
+                            const newSmoke =
+                                Math.round((sensor.smoke + (targetSmoke - sensor.smoke) * adjustedProgress) * 10) / 10;
+                            const newStatus = determineStatus(newCO, newSmoke);
+                            return { 
+                                ...sensor, 
+                                temperature: newCO, 
+                                smoke: newSmoke, 
+                                CO: newCO, 
+                                status: newStatus 
+                            };
+                        }
+                    }
+                    return sensor;
+                })
+            }))
+        );
 
-			if (progress >= 1) {
-				clearInterval(interval);
-				if (targetState === 'fire') {
-					isFireSimulation.set(true);
-				}
-			}
-		}, 100);
-	}
+        if (progress >= 1) {
+            clearInterval(interval);
+            if (targetState === 'fire') {
+                isFireSimulation.set(true);
+            }
+        }
+    }, 100);
+}
 
-	function startFalseAlarm(): void {
-		isFalseAlarm.set(true);
-		isFireSimulation.set(false);
-		toggleStove();
-		smoothTransition('false-alarm', 5000);
-		notification.set('Simulering av falskt larm startat. Spisen är på och orsakar rök.');
-	}
+
+function startFalseAlarm(): void {
+    isFalseAlarm.set(true);
+    isFireSimulation.set(false);
+    // First ensure stove is on
+    rooms.update((roomList) =>
+        roomList.map((room) => ({
+            ...room,
+            sensors: room.sensors.map((sensor) => {
+                if (sensor.id === '2' && sensor.type === 'Uttag') {
+                    return { ...sensor, status: 'on' };
+                }
+                return sensor;
+            })
+        }))
+    );
+    smoothTransition('false-alarm', 5000);
+    notification.set('Simulering av falskt larm startat. Rök från köket påverkar även sovrummet.');
+}
+
 
 	function startFireSimulation(): void {
 		isFireSimulation.set(true);
 		isFalseAlarm.set(false);
 		smoothTransition('fire', 10000);
-		notification.set('Brandsimulering startad. Observera sensorernas beteende.');
+		notification.set('Brandsimulering startad. Brand upptäckt i köket som sprider sig till sovrummet.');
 		triggerNotification();
 	}
-
-	/*function spreadFire(): void {
-		rooms.update((roomList) =>
-    roomList.map((room) => ({
-			...room,
-			sensors: room.sensors.map((sensor) => {
-        if (sensor.status != undefined && sensor.status != null){
-				const sourceRoom = sensor.status.find(
-					(sensor) => sensor.status === 'alarm' || sensor.status === 'danger'
-				);
-        }
-				if (sourceRoom) {
-					const adjacentRooms = sensor.filter(
-						(sensor) => sensor.id !== sourceRoom.id && sensor.type === 'brandvarnare'
-					);
-					const targetRoom = adjacentRooms[Math.floor(Math.random() * adjacentRooms.length)];
-
-					if (
-						targetRoom &&
-						targetRoom.temperature !== undefined &&
-						targetRoom.smoke !== undefined
-					) {
-						const tempIncrease = Math.random() * 5 + 5;
-						const smokeIncrease = Math.random() * 10 + 10;
-
-						targetRoom.temperature = Math.min(100, targetRoom.temperature + tempIncrease);
-						targetRoom.smoke = Math.min(100, targetRoom.smoke + smokeIncrease);
-						targetRoom.status = determineStatus(targetRoom.temperature, targetRoom.smoke);
-					}
-				}
-
-				return sensorList;
-			})
-		})));
-	}
-*/
 	function makeEmergencyCall(): void {
 		isEmergencyCallActive.set(true);
 	}
@@ -306,12 +307,6 @@
 		idleInterval = setInterval(idleVariations, 2000);
 	});
 
-	/* $: if ($isFireSimulation) {
-		fireSpreadInterval = setInterval(spreadFire, 5000);
-	} else {
-		clearInterval(fireSpreadInterval);
-	}
-*/
 	onDestroy(() => {
 		clearInterval(idleInterval);
 		clearInterval(fireSpreadInterval);
@@ -373,12 +368,25 @@
 			: selectedSensorType === 'Uttag'
 				? { status: 'off' }
 				: { temperature: 0 };
+
+
+	function getStatusColor(value: number) {
+		if (value < 20) return 'bg-green-500';
+		if (value < 40) return 'bg-yellow-500';
+		return 'bg-red-500';
+	}
+
+	function getStatusBorder(status: string) {
+		switch (status) {
+		case 'alarm': return 'border-l-red-500';
+		case 'danger': return 'border-l-orange-500';
+		case 'warning': return 'border-l-yellow-500';
+		default: return 'border-l-gray-200';
+		}
+	}
 </script>
 
-TODO::: > Se till att app-Home och Flamewatch har liknande design > Ändra så länken till Flamewatch
-är Flamewatch och inte Simulation > Kolla buggen med att lägga till flera brandvarnare, är det samma
-för uttag? Är det något i backend så man bara kan lägga till ett visst antal. Den behöver initsiera
-ny simulation för alla nya sensorer.
+
 
 <!-- Layout: FlameWatch Room Cards with Sensor Integration -->
 <div class="app-container">
@@ -461,18 +469,19 @@ ny simulation för alla nya sensorer.
 						</div>
 					</div>
 				{:else if sensor.type === 'Uttag'}
-					<div class="sensor-row">
-						<div class="sensor-header">
-							<div class="card-name-icon">
-								<div class="room-icon-circle">
-									<Plug class="text-black-500 h-4 w-4" />
-								</div>
-								<h4>{sensor.type}</h4>
+				<div class="sensor-row">
+					<div class="sensor-header">
+						<div class="card-name-icon">
+							<div class="room-icon-circle">
+								<Plug class="text-black-500 h-4 w-4" />
 							</div>
+							<h4>{sensor.name || sensor.type}</h4>
 						</div>
-						<div class="sensor-data"></div>
-						<div>{sensor.name} Status: {sensor.status}</div>
 					</div>
+					<div class="sensor-data">
+						<span>Status: {sensor.status === 'on' ? 'På' : 'Av'}</span>
+					</div>
+				</div>
 				{:else if sensor.type === 'Temperatur'}
 					<div>
 						<span>{sensor.temperature?.toFixed(1)} °C</span>
@@ -569,67 +578,71 @@ ny simulation för alla nya sensorer.
 		</div>
 	{/if}
 </div>
-{#if $notification}
-	<div class="mt-6 border-l-4 border-yellow-500 bg-yellow-100 p-4 text-yellow-700">
-		<div class="flex items-start">
-			<AlertCircle class="mr-2 h-6 w-6 flex-shrink-0" />
-			<p>{$notification}</p>
-		</div>
-	</div>
-{/if}
+
 <div class="mt-6 flex flex-wrap justify-center gap-4">
-	<button
-		class="rounded bg-gray-200 px-4 py-2 text-gray-800 transition-colors hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50"
-		on:click={() => window.location.reload()}
-	>
-		Återställ Simulation
-	</button>
-	<button
-		class="rounded bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
-		on:click={startFireSimulation}
-		disabled={$isFireSimulation || $isFalseAlarm}
-	>
-		Starta Brandsimulering
-	</button>
-	<button
-		class="rounded bg-yellow-500 px-4 py-2 text-white transition-colors hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50"
-		on:click={startFalseAlarm}
-		disabled={$isFireSimulation || $isFalseAlarm}
-	>
-		Simulera Falskt Larm
-	</button>
-	{#if $isFireSimulation}
-		<button
-			class="rounded bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
-			on:click={makeEmergencyCall}
-			disabled={$isEmergencyCallActive}
-		>
-			Ring SOS Alarm
-		</button>
-	{/if}
+    <button
+        class="rounded bg-[#99bbcf] px-4 py-2 text-white transition-colors hover:bg-[#7a9fb3] focus:outline-none focus:ring-2 focus:ring-[#99bbcf] focus:ring-opacity-50 shadow-md"
+        on:click={() => window.location.reload()}
+    >
+        Återställ Simulation
+    </button>
+    <button
+        class="rounded bg-[#c15564] px-4 py-2 text-white transition-colors hover:bg-[#a94754] focus:outline-none focus:ring-2 focus:ring-[#c15564] focus:ring-opacity-50 shadow-md"
+        on:click={startFireSimulation}
+        disabled={$isFireSimulation || $isFalseAlarm}
+    >
+        Starta Brandsimulering
+    </button>
+    <button
+        class="rounded bg-[#a5ba5c] px-4 py-2 text-white transition-colors hover:bg-[#8a9c4c] focus:outline-none focus:ring-2 focus:ring-[#a5ba5c] focus:ring-opacity-50 shadow-md"
+        on:click={startFalseAlarm}
+        disabled={$isFireSimulation || $isFalseAlarm}
+    >
+        Simulera Falskt Larm
+    </button>
+    {#if $isFireSimulation}
+        <button
+            class="rounded bg-[#99bbcf] px-4 py-2 text-white transition-colors hover:bg-[#7a9fb3] focus:outline-none focus:ring-2 focus:ring-[#99bbcf] focus:ring-opacity-50 shadow-md"
+            on:click={makeEmergencyCall}
+            disabled={$isEmergencyCallActive}
+        >
+            Ring SOS Alarm
+        </button>
+    {/if}
 </div>
 
 {#if $isEmergencyCallActive}
-	<div
-		class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-		transition:fade={{ delay: 250, duration: 300 }}
-	>
-		<div class="rounded-lg bg-white p-6 shadow-xl">
-			<h3 class="mb-4 text-xl font-bold">Nödsamtal aktivt</h3>
-			<p class="mb-4">Simulerat nödsamtal till räddningstjänsten pågår...</p>
-			<div class="flex justify-center">
-				<Phone class="h-12 w-12 animate-pulse text-green-500" />
-			</div>
-			<button
-				class="mt-4 rounded bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
-				on:click={() => isEmergencyCallActive.set(false)}
-			>
-				Avsluta samtal
-			</button>
+    <div
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        transition:fade={{ delay: 250, duration: 300 }}
+    >
+        <div class="rounded-lg bg-white p-6 shadow-xl border-l-4 border-[#c15564]">
+            <h3 class="mb-4 text-xl font-bold text-[#c15564]">Nödsamtal aktivt</h3>
+            <p class="mb-4">Simulerat nödsamtal till räddningstjänsten pågår...</p>
+            <div class="flex justify-center">
+                <Phone class="h-12 w-12 animate-pulse text-[#c15564]" />
+            </div>
+            <button
+                class="mt-4 rounded bg-[#c15564] px-4 py-2 text-white transition-colors hover:bg-[#a94754] focus:outline-none focus:ring-2 focus:ring-[#c15564] focus:ring-opacity-50 shadow-md"
+                on:click={() => isEmergencyCallActive.set(false)}
+            >
+                Avsluta samtal
+            </button>
+        </div>
+    </div>
+{/if}
+{#if $notification}
+<div class="container mx-auto mt-4">
+	<div class="flex items-center justify-center">
+		<div class={`${$isFalseAlarm ? 'bg-yellow-500' : 'bg-[#c15564]'} text-white p-4 rounded-l shadow-md`}>
+			<AlertCircle class="h-6 w-6 flex-shrink-0" />
+		</div>
+		<div class={`${$isFalseAlarm ? 'bg-yellow-500' : 'bg-[#c15564]'} p-4 text-white rounded-r shadow-md`}>
+			<p>{$notification}</p>
 		</div>
 	</div>
+</div>
 {/if}
-
 <style>
 	.app-container {
 		max-width: 375px;
