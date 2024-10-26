@@ -483,9 +483,19 @@ function startFalseAlarm(): void {
 					</div>
 				</div>
 				{:else if sensor.type === 'Temperatur'}
-					<div>
-						<span>{sensor.temperature?.toFixed(1)} °C</span>
-					</div>
+          <div class="sensor-row">
+            <div class="sensor-header">
+              <div class="card-name-icon">
+                <div class="room-icon-circle">
+                  <Plug class="text-black-500 h-4 w-4" />
+                </div>
+                <h4>{sensor.name || sensor.type}</h4>
+              </div>
+            </div>
+            <div class="sensor-data">
+              <span>{sensor.temperature?.toFixed(1)} °C</span>
+            </div>
+          </div>
 				{/if}
 			{/each}
 		</div>
