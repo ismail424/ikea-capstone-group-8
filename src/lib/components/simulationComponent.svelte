@@ -91,11 +91,11 @@
 		let newValue = value?.toFixed(1);
 		if (value?.toFixed(1) != null) {
 			if (value < firstSmokeLimit) {
-				return 'Låg';
+				return 'Låg nivå';
 			} else if (value >= firstSmokeLimit && value < secondSmokeLimit) {
-				return 'Mellan';
+				return 'Mellan nivå';
 			} else {
-				return 'Hög';
+				return 'Hög nivå';
 			}
 		}
 		return 'Unknown';
@@ -105,11 +105,11 @@
 		let newValue = value?.toFixed(1);
 		if (value?.toFixed(1) != null) {
 			if (value < firstCOLimit) {
-				return 'Låg';
+				return 'Låg nivå';
 			} else if (value >= firstCOLimit && value < secondCOLimit) {
-				return 'Mellan';
+				return 'Mellan nivå';
 			} else {
-				return 'Hög';
+				return 'Hög nivå';
 			}
 		}
 		return 'unknown';
