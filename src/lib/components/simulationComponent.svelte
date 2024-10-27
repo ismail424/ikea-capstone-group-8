@@ -520,14 +520,14 @@ function startFalseAlarm(): void {
 		<div class="modal" on:click={closeModal}>
 			<div class="modal-content" on:click|stopPropagation>
 				<div class="modal-header">
-					<h3 class="font-bold">Lägg till/ta bort rum</h3>
+					<h3 class="font-bold">Add / Remove room</h3>
 					<button on:click={closeModal}><X /></button>
 				</div>
 
 				<!-- Text box for adding a new room -->
 				<div class="modal-room-row mb-5">
-					<input type="text" bind:value={newRoomName} placeholder="Rumsnamn" />
-					<button class="button" on:click={addRoom}>Lägg till</button>
+					<input type="text" bind:value={newRoomName} placeholder="Room name" />
+					<button class="button" on:click={addRoom}>Add</button>
 				</div>
 				<!-- List of existing rooms with delete option -->
 				<ul class="modal-room-ul">
@@ -535,7 +535,7 @@ function startFalseAlarm(): void {
 						<li class="modal-room-li">
 							<div class="modal-room-row">
 								{room.name}
-								<button class="button" on:click={() => deleteRoom(room.id)}>Ta bort</button>
+								<button class="button" on:click={() => deleteRoom(room.id)}>Remove</button>
 							</div>
 						</li>
 					{/each}
@@ -553,12 +553,12 @@ function startFalseAlarm(): void {
 		<div class="modal" on:click={closeModal}>
 			<div class="modal-content" on:click|stopPropagation>
 				<div class="modal-header">
-					<h3 class="font-bold">Lägg till / Ta bort sensor</h3>
+					<h3 class="font-bold">Add / Remove sensor</h3>
 					<button on:click={closeModal}><X /></button>
 				</div>
 				<!-- Dropdown for Sensor Type -->
 				<div class="modal-room-row mb-5">
-					<label for="sensor-type">Sensortyp:</label>
+					<label for="sensor-type">Sensor type:</label>
 					<select class="ml-2" id="sensor-type" bind:value={selectedSensorType}>
 						<option value="Fire Alarm">Fire alarm</option>
 						<option value="Socket">Socket</option>
@@ -567,18 +567,18 @@ function startFalseAlarm(): void {
 				</div>
 				<div class="modal-room-row mb-3">
 					<!-- {#if selectedSensorType != "Brandvarnare"} -->
-					<label for="sensor-name">Sensornamn:</label>
+					<label for="sensor-name">Sensor name:</label>
 					<input
 						class="ml-2"
 						id="sensor-name"
 						type="text"
-						placeholder="Sensornamn"
+						placeholder="Sensor name"
 						bind:value={newSensorName}
 					/>
 					<!-- {/if} -->
 				</div>
 				<div class="flex justify-end">
-					<button class="button" on:click={() => addSensorToRoom(selectedRoomId)}>Lägg till</button>
+					<button class="button" on:click={() => addSensorToRoom(selectedRoomId)}>Add</button>
 				</div>
 
 				<!-- Existing Sensors -->
@@ -589,7 +589,7 @@ function startFalseAlarm(): void {
 							<div class="modal-room-row">
 								<h4>{sensor.name || ''} ({sensor.type})</h4>
 								<button class="button" on:click={() => deleteSensor(selectedRoomId, sensor.id)}
-									>Ta bort</button
+									>Remove</button
 								>
 							</div>
 						</li>{/each}
