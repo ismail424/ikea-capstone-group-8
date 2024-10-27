@@ -12,6 +12,11 @@
 		faPlus,
 		faHouseFire
 	} from '@fortawesome/free-solid-svg-icons';
+	import {
+		AlarmSmoke,
+		Lightbulb,
+		Plug
+	} from 'lucide-svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { FaceExplodeOutline } from 'flowbite-svelte-icons';
 </script>
@@ -44,10 +49,10 @@
 			<h3>Living Room</h3>
 			<div class="room-product-icons">
 				<div class="room-icon-circle">
-					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
+					<Lightbulb class="text-black-500 h-5 w-5"/>
 				</div>
 				<div class="room-icon-circle">
-					<FontAwesomeIcon icon={faPlug} class="room-icon" />
+					<Plug class="text-black-500 h-5 w-5"/>
 				</div>
 			</div>
 		</div>
@@ -57,11 +62,11 @@
 			<h3>Kitchen</h3>
 			<div class="room-product-icons">
 				<div class="room-icon-circle">
-					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
+					<Lightbulb class="text-black-500 h-5 w-5"/>
 				</div>
 				<a href="../flamewatch">
 					<div class="room-icon-circle">
-						<FontAwesomeIcon icon={faHouseFire} class="product-icon" />
+						<AlarmSmoke class="text-black-500 h-5 w-5" />
 					</div>
 				</a>
 			</div>
@@ -72,7 +77,7 @@
 			<h3>Gaming</h3>
 			<div class="room-product-icons">
 				<div class="room-icon-circle">
-					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
+					<Lightbulb class="text-black-500 h-5 w-5"/>
 				</div>
 			</div>
 		</div>
@@ -82,7 +87,7 @@
 			<h3>Bedroom</h3>
 			<div class="room-product-icons">
 				<div class="room-icon-circle">
-					<FontAwesomeIcon icon={faPlug} class="product-icon" />
+					<Plug class="text-black-500 h-5 w-5"/>
 				</div>
 			</div>
 		</div>
@@ -92,7 +97,7 @@
 			<h3>Dining Room</h3>
 			<div class="room-product-icons">
 				<div class="room-icon-circle">
-					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
+					<Lightbulb class="text-black-500 h-5 w-5"/>
 				</div>
 			</div>
 		</div>
@@ -102,7 +107,7 @@
 			<h3>Laundry Room</h3>
 			<div class="room-product-icons">
 				<div class="room-icon-circle">
-					<FontAwesomeIcon icon={faLightbulb} class="product-icon" />
+					<Lightbulb class="text-black-500 h-5 w-5"/>
 				</div>
 			</div>
 		</div>
