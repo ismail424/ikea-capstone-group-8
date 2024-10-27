@@ -31,7 +31,7 @@
 	interface Sensor {
 		id: string;
 		name?: string | null;
-		type: 'Brandvarnare' | 'Uttag' | 'Temperatur';
+		type: 'Fire Alarm' | 'Socket' | 'Temperature Meter';
 		status?: string;
 		batteryLevel?: number | null;
 		temperature?: number | null;
@@ -48,17 +48,17 @@
 	let rooms: Writable<Room[]> = writable([
 		{
 			id: '1',
-			name: 'Kök',
+			name: 'Kitchen',
 			sensors: [
-				{ id: '1', type: 'Brandvarnare', status: 'active', batteryLevel: 85, smoke: 0, CO: 0, temperature: 24 },
-				{ id: '2', name: 'Spis', type: 'Uttag', status: 'off' },  // Changed initial status to 'off'
+				{ id: '1', type: 'Fire Alarm', status: 'active', batteryLevel: 85, smoke: 0, CO: 0, temperature: 24 },
+				{ id: '2', name: 'Stove', type: 'Socket', status: 'off' },  // Changed initial status to 'off'
 			]
 		},
 		{
 			id: '2',
-			name: 'Sovrum',
+			name: 'Bedroom',
 			sensors: [
-				{ id: '3', type: 'Brandvarnare', status: 'active', batteryLevel: 92, smoke: 0, CO: 0, temperature: 24 }
+				{ id: '3', type: 'Fire Alarm', status: 'active', batteryLevel: 92, smoke: 0, CO: 0, temperature: 24 }
 			]
 		}
 	]);
@@ -79,7 +79,7 @@
 	let firstCOLimit = 20; // Low limit for CO in the air
 	let secondCOLimit = 40; // High limit for CO in the air
 
-	let selectedSensorType: Sensor['type'] = 'Brandvarnare';
+	let selectedSensorType: Sensor['type'] = 'Fire Alarm';
 	let newSensorProperties: Partial<Sensor> = {};
 
 	function addRoom() {
@@ -91,11 +91,11 @@
 		let newValue = value?.toFixed(1);
 		if (value?.toFixed(1) != null) {
 			if (value < firstSmokeLimit) {
-				return 'Låg nivå';
+				return 'Low level';
 			} else if (value >= firstSmokeLimit && value < secondSmokeLimit) {
-				return 'Mellan nivå';
+				return 'Medium level';
 			} else {
-				return 'Hög nivå';
+				return 'High level';
 			}
 		}
 		return 'Unknown';
@@ -105,11 +105,11 @@
 		let newValue = value?.toFixed(1);
 		if (value?.toFixed(1) != null) {
 			if (value < firstCOLimit) {
-				return 'Låg nivå';
+				return 'Low level';
 			} else if (value >= firstCOLimit && value < secondCOLimit) {
-				return 'Mellan nivå';
+				return 'Medium level';
 			} else {
-				return 'Hög nivå';
+				return 'High level';
 			}
 		}
 		return 'unknown';
@@ -153,7 +153,7 @@
                     sensor.temperature !== null
 
                 ) {
-                    const isKitchen = room.name === 'Kök';
+                    const isKitchen = room.name === 'Kitchen';
                     // Smaller variations for bedroom sensors
                     const variationMultiplier = isKitchen ? 1 : 0.7;
                     
@@ -192,7 +192,7 @@
 			roomList.map((room) => ({
 				...room,
 				sensors: room.sensors.map((sensor) => {
-					if (sensor.id === '2' && sensor.type === 'Uttag') {
+					if (sensor.id === '2' && sensor.type === 'Socket') {
 						return { ...sensor, status: sensor.status === 'on' ? 'off' : 'on' };
 					}
 					return sensor;
@@ -214,14 +214,14 @@
                 sensors: room.sensors.map((sensor) => {
                     // Check if sensor is a smoke detector in either Kitchen or Bedroom
                     if (
-                        (room.name === 'Kök' || room.name === 'Sovrum') &&
-                        (sensor.type === 'Brandvarnare' || sensor.type === "Temperatur") &&
+                        (room.name === 'Kitchen' || room.name === 'Bedroom') &&
+                        (sensor.type === 'Fire Alarm' || sensor.type === "Temperature Meter") &&
                         sensor.temperature !== undefined &&
                         sensor.smoke !== undefined && 
                         sensor.temperature != null
                     ) {
                         // Adjust targets based on room (bedroom gets lower values due to distance)
-                        const isKitchen = room.name === 'Kök';
+                        const isKitchen = room.name === 'Kitchen';
                         const targetTemp = targetState === 'false-alarm' 
                             ? (isKitchen ? 45 : 35)  // Lower temp in bedroom
                             : (isKitchen ? 80 : 60); // Lower temp in bedroom during fire
@@ -286,7 +286,7 @@ function startFalseAlarm(): void {
         roomList.map((room) => ({
             ...room,
             sensors: room.sensors.map((sensor) => {
-                if (sensor.id === '2' && sensor.type === 'Uttag') {
+                if (sensor.id === '2' && sensor.type === 'Socket') {
                     return { ...sensor, status: 'on' };
                 }
                 return sensor;
@@ -356,7 +356,7 @@ function startFalseAlarm(): void {
 	// Reset form after sensor is added
 	function resetSensorForm() {
 		newSensorName = '';
-		selectedSensorType = 'Brandvarnare';
+		selectedSensorType = 'Fire Alarm';
 		newSensorProperties = {};
 	}
 
@@ -373,9 +373,9 @@ function startFalseAlarm(): void {
 
 	// Update properties dynamically based on selected type
 	$: newSensorProperties =
-		selectedSensorType === 'Brandvarnare'
+		selectedSensorType === 'Fire Alarm'
 			? { batteryLevel: 100, smoke: 0, CO: 0 }
-			: selectedSensorType === 'Uttag'
+			: selectedSensorType === 'Socket'
 				? { status: 'off' }
 				: { temperature: 0 };
 
@@ -405,7 +405,7 @@ function startFalseAlarm(): void {
 	</div>
 
 	<div class="room-header">
-		<h3>Rum</h3>
+		<h3>Rooms</h3>
 		<button on:click={() => showAddRoomModal.set(true)} class="plus-button">
 			<Pencil size="19" />
 		</button>
@@ -414,11 +414,11 @@ function startFalseAlarm(): void {
 	<!-- Room Cards -->
 	{#each $rooms as room (room.id)}
 		<div
-			class="room-card {room.name === 'Kök'
+			class="room-card {room.name === 'Kitchen'
 				? 'kitchen'
 				: room.name === 'Vardagsrum'
 					? 'living-room'
-					: room.name === 'Sovrum'
+					: room.name === 'Bedroom'
 						? 'bedroom'
 						: ''}"
 		>
@@ -426,11 +426,11 @@ function startFalseAlarm(): void {
 				<div class="card-name-icon">
 					<span>
 						<FontAwesomeIcon
-							icon={room.name === 'Kök'
+							icon={room.name === 'Kitchen'
 								? faUtensils
 								: room.name === 'Vardagsrum'
 									? faCouch
-									: room.name === 'Sovrum'
+									: room.name === 'Bedroom'
 										? faBed
 										: faTshirt}
 							class="icon"
@@ -451,7 +451,7 @@ function startFalseAlarm(): void {
 
 			<!-- List Sensors -->
 			{#each room.sensors as sensor (sensor.id)}
-				{#if sensor.type === 'Brandvarnare'}
+				{#if sensor.type === 'Fire Alarm'}
 					<div class="sensor-row">
 						<div class="sensor-header">
 							<div class="card-name-icon">
@@ -467,7 +467,7 @@ function startFalseAlarm(): void {
 						</div>
 						<div class="sensor-data">
 							<div>
-								<span>Partiklar:</span>
+								<span>Particles:</span>
 								<span>{smokeToString(sensor.smoke)} </span>
 							</div>
 						</div>
@@ -478,7 +478,7 @@ function startFalseAlarm(): void {
 							</div>
 						</div>
 					</div>
-				{:else if sensor.type === 'Uttag'}
+				{:else if sensor.type === 'Socket'}
 				<div class="sensor-row">
 					<div class="sensor-header">
 						<div class="card-name-icon">
@@ -489,10 +489,10 @@ function startFalseAlarm(): void {
 						</div>
 					</div>
 					<div class="sensor-data">
-						<span>Status: {sensor.status === 'on' ? 'På' : 'Av'}</span>
+						<span>Status: {sensor.status === 'on' ? 'On' : 'Off'}</span>
 					</div>
 				</div>
-				{:else if sensor.type === 'Temperatur'}
+				{:else if sensor.type === 'Temperature Meter'}
           <div class="sensor-row">
             <div class="sensor-header">
               <div class="card-name-icon">
@@ -560,9 +560,9 @@ function startFalseAlarm(): void {
 				<div class="modal-room-row mb-5">
 					<label for="sensor-type">Sensortyp:</label>
 					<select class="ml-2" id="sensor-type" bind:value={selectedSensorType}>
-						<option value="Brandvarnare">Brandvarnare</option>
-						<option value="Uttag">Uttag</option>
-						<option value="Temperatur">Temperatur</option>
+						<option value="Fire Alarm">Fire alarm</option>
+						<option value="Socket">Socket</option>
+						<option value="Temperature Meter">Temperature Meter</option>
 					</select>
 				</div>
 				<div class="modal-room-row mb-3">
