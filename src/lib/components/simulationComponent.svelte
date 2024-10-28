@@ -17,7 +17,8 @@
 		Plug,
 		X,
 		Phone,
-		AlertCircle
+		AlertCircle,
+		ThermometerIcon
 	} from 'lucide-svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
@@ -497,7 +498,7 @@ function startFalseAlarm(): void {
             <div class="sensor-header">
               <div class="card-name-icon">
                 <div class="room-icon-circle">
-                  <Plug class="text-black-500 h-4 w-4" />
+                  <ThermometerIcon class="text-black-500 h-4 w-4" />
                 </div>
                 <h4>{sensor.name || sensor.type}</h4>
               </div>

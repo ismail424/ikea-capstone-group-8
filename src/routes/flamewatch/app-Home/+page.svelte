@@ -15,7 +15,8 @@
 	import {
 		AlarmSmoke,
 		Lightbulb,
-		Plug
+		Plug,
+		ThermometerIcon
 	} from 'lucide-svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { FaceExplodeOutline } from 'flowbite-svelte-icons';
@@ -69,9 +70,15 @@
 						<AlarmSmoke class="text-black-500 h-5 w-5" />
 					</div>
 				</a>
+				<div class="room-icon-circle">
+					<Plug class="text-black-500 h-5 w-5"/>
+				</div>
+				<div class="room-icon-circle">
+					<ThermometerIcon class="text-black-500 h-5 w-5"/>
+				</div>
 			</div>
 		</div>
-
+ 
 		<div class="room-card gaming">
 			<FontAwesomeIcon icon={faGamepad} class="icon" />
 			<h3>Gaming</h3>
@@ -89,6 +96,11 @@
 				<div class="room-icon-circle">
 					<Plug class="text-black-500 h-5 w-5"/>
 				</div>
+				<a href="../flamewatch">
+				<div class="room-icon-circle">
+					<AlarmSmoke class="text-black-500 h-5 w-5" />
+				</div>
+			</a>
 			</div>
 		</div>
 
