@@ -335,7 +335,7 @@
 
 		<div class="mt-10 flex justify-center">
 			<a
-				href="https://flamewatch.sacic.dev/flamewatch"
+				href="https://flamewatch.sacic.dev/flamewatch/app-Home"
 				class="transform rounded-full bg-indigo-600 px-10 py-4 text-lg font-medium text-white shadow-lg transition duration-300 ease-in-out hover:-translate-y-1 hover:bg-indigo-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-300"
 			>
 				View Simulation
