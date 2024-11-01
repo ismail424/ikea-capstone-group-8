@@ -1,6 +1,6 @@
 # FlameWatch
 
-**FlameWatch** is a web-based fire alarm system designed to monitor fire alarms and notify emergency services in case of a fire. This application uses modern web technologies to provide a streamlined and efficient way to enhance fire safety.
+**FlameWatch** is a web-based fire alarm system designed to monitor fire alarms and notify emergency services in case of a fire. This application uses modern web technologies to provide a streamlined and efficient way to enhance fire safety
 
 ## Table of Contents
 - [Features](#features)
